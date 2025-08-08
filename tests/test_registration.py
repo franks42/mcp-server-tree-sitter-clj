@@ -102,7 +102,9 @@ def test_register_tools_registers_all_tools(mock_mcp_server, mock_container):
     ]
 
     for tool_name in expected_tools:
-        assert tool_name in mock_mcp_server.tools, f"Tool {tool_name} was not registered"
+        assert (
+            tool_name in mock_mcp_server.tools
+        ), f"Tool {tool_name} was not registered"
 
 
 def test_register_prompts_registers_all_prompts(mock_mcp_server, mock_container):
@@ -120,11 +122,15 @@ def test_register_prompts_registers_all_prompts(mock_mcp_server, mock_container)
     ]
 
     for prompt_name in expected_prompts:
-        assert prompt_name in mock_mcp_server.prompts, f"Prompt {prompt_name} was not registered"
+        assert (
+            prompt_name in mock_mcp_server.prompts
+        ), f"Prompt {prompt_name} was not registered"
 
 
 @patch("mcp_server_tree_sitter.tools.analysis.extract_symbols")
-def test_get_symbols_tool_calls_extract_symbols(mock_extract_symbols, mock_mcp_server, mock_container):
+def test_get_symbols_tool_calls_extract_symbols(
+    mock_extract_symbols, mock_mcp_server, mock_container
+):
     """Test that the get_symbols tool correctly calls extract_symbols."""
     # Setup
     register_tools(mock_mcp_server, mock_container)
@@ -142,7 +148,9 @@ def test_get_symbols_tool_calls_extract_symbols(mock_extract_symbols, mock_mcp_s
 
 
 @patch("mcp_server_tree_sitter.tools.search.query_code")
-def test_run_query_tool_calls_query_code(mock_query_code, mock_mcp_server, mock_container):
+def test_run_query_tool_calls_query_code(
+    mock_query_code, mock_mcp_server, mock_container
+):
     """Test that the run_query tool correctly calls query_code."""
     # Setup
     register_tools(mock_mcp_server, mock_container)
@@ -150,7 +158,10 @@ def test_run_query_tool_calls_query_code(mock_query_code, mock_mcp_server, mock_
 
     # Call the tool and discard result
     mock_mcp_server.tools["run_query"](
-        project="test_project", query="test query", file_path="test.py", language="python"
+        project="test_project",
+        query="test query",
+        file_path="test.py",
+        language="python",
     )
 
     # Verify query_code was called with correct parameters
@@ -170,17 +181,23 @@ def test_configure_tool_updates_config(mock_mcp_server, mock_container):
     register_tools(mock_mcp_server, mock_container)
 
     # Call the tool and discard result
-    mock_mcp_server.tools["configure"](cache_enabled=False, max_file_size_mb=10, log_level="DEBUG")
+    mock_mcp_server.tools["configure"](
+        cache_enabled=False, max_file_size_mb=10, log_level="DEBUG"
+    )
 
     # Verify the config manager was updated
     mock_container.config_manager.update_value.assert_any_call("cache.enabled", False)
-    mock_container.config_manager.update_value.assert_any_call("security.max_file_size_mb", 10)
+    mock_container.config_manager.update_value.assert_any_call(
+        "security.max_file_size_mb", 10
+    )
     mock_container.config_manager.update_value.assert_any_call("log_level", "DEBUG")
     mock_container.tree_cache.set_enabled.assert_called_with(False)
 
 
 @patch("mcp_server_tree_sitter.tools.file_operations.list_project_files")
-def test_list_files_tool_calls_list_project_files(mock_list_files, mock_mcp_server, mock_container):
+def test_list_files_tool_calls_list_project_files(
+    mock_list_files, mock_mcp_server, mock_container
+):
     """Test that the list_files tool correctly calls list_project_files."""
     # Setup
     register_tools(mock_mcp_server, mock_container)
@@ -204,7 +221,9 @@ def test_get_ast_tool_calls_get_file_ast(mock_get_ast, mock_mcp_server, mock_con
     mock_get_ast.return_value = {"tree": {}, "file": "test.py", "language": "python"}
 
     # Call the tool and discard result
-    mock_mcp_server.tools["get_ast"](project="test_project", path="test.py", max_depth=3)
+    mock_mcp_server.tools["get_ast"](
+        project="test_project", path="test.py", max_depth=3
+    )
 
     # Verify get_file_ast was called with correct parameters
     mock_get_ast.assert_called_once()

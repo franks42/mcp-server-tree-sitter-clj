@@ -5,7 +5,9 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from mcp_server_tree_sitter.capabilities.server_capabilities import register_capabilities
+from mcp_server_tree_sitter.capabilities.server_capabilities import (
+    register_capabilities,
+)
 
 
 class MockMCPServer:
@@ -95,7 +97,9 @@ def test_handle_logging(mock_get_container, mock_logger, mock_server, mock_confi
 
 
 @patch("mcp_server_tree_sitter.di.get_container")
-def test_handle_completion_project_suggestions(mock_get_container, mock_server, mock_config):
+def test_handle_completion_project_suggestions(
+    mock_get_container, mock_server, mock_config
+):
     """Test completion handler for project suggestions."""
     # Configure mock container
     mock_container = MagicMock()
@@ -134,7 +138,9 @@ def test_handle_completion_project_suggestions(mock_get_container, mock_server, 
 
 
 @patch("mcp_server_tree_sitter.di.get_container")
-def test_handle_completion_language_suggestions(mock_get_container, mock_server, mock_config):
+def test_handle_completion_language_suggestions(
+    mock_get_container, mock_server, mock_config
+):
     """Test completion handler for language suggestions."""
     # Configure mock container
     mock_container = MagicMock()
@@ -143,7 +149,10 @@ def test_handle_completion_language_suggestions(mock_get_container, mock_server,
 
     # Add language_registry to container
     mock_container.language_registry = MagicMock()
-    mock_container.language_registry.list_available_languages.return_value = ["python", "javascript"]
+    mock_container.language_registry.list_available_languages.return_value = [
+        "python",
+        "javascript",
+    ]
 
     mock_get_container.return_value = mock_container
 
@@ -169,7 +178,9 @@ def test_handle_completion_language_suggestions(mock_get_container, mock_server,
 
 
 @patch("mcp_server_tree_sitter.di.get_container")
-def test_handle_completion_config_suggestions(mock_get_container, mock_server, mock_config):
+def test_handle_completion_config_suggestions(
+    mock_get_container, mock_server, mock_config
+):
     """Test completion handler for config suggestions."""
     # Configure mock container
     mock_container = MagicMock()

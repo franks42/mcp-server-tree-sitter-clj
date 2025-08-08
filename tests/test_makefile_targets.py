@@ -21,15 +21,23 @@ def test_makefile_target_syntax():
     assert len(mcp_targets) >= 3, "Missing proper mcp invocation in Makefile targets"
 
     # Check for correct server module reference
-    assert "$(PACKAGE).server" in makefile_content, "Server module reference is incorrect"
+    assert (
+        "$(PACKAGE).server" in makefile_content
+    ), "Server module reference is incorrect"
 
     # Custom test for mcp-run
     mcp_run_pattern = r"mcp-run:.*\n\t\$\(UV\) run mcp run \$\(PACKAGE\)\.server"
-    assert re.search(mcp_run_pattern, makefile_content), "mcp-run target is incorrectly formed"
+    assert re.search(
+        mcp_run_pattern, makefile_content
+    ), "mcp-run target is incorrectly formed"
 
     # Test that help is the default target
-    assert ".PHONY: all help" in makefile_content, "help is not properly declared as .PHONY"
-    assert "help: show-help" in makefile_content, "help is not properly set as default target"
+    assert (
+        ".PHONY: all help" in makefile_content
+    ), "help is not properly declared as .PHONY"
+    assert (
+        "help: show-help" in makefile_content
+    ), "help is not properly set as default target"
 
 
 def test_makefile_target_execution():
@@ -68,7 +76,9 @@ def test_makefile_target_execution():
         # We don't fail the test if the help check fails - this is more of a warning
         # since the environment might not be set up to run make directly
         if not has_usage:
-            print("WARNING: Couldn't verify mcp-run --help output; environment may not be properly configured")
+            print(
+                "WARNING: Couldn't verify mcp-run --help output; environment may not be properly configured"
+            )
 
     except (subprocess.SubprocessError, FileNotFoundError) as e:
         # Don't fail the test if we can't run make

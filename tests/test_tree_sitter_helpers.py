@@ -127,7 +127,9 @@ def test_parse_file_with_detection(test_files, tmp_path):
     assert source.startswith(b"def hello")
 
     # Parse JavaScript file
-    tree, source = parse_file_with_detection(test_files["javascript"], "javascript", registry)
+    tree, source = parse_file_with_detection(
+        test_files["javascript"], "javascript", registry
+    )
     assert tree is not None
     assert source is not None
     assert isinstance(source, bytes)
@@ -190,7 +192,9 @@ def test_parse_source_incremental(parsed_files):
 
     # Parse with original tree
     original_tree = py_parser.parse(py_source)
-    incremental_tree = parse_source_incremental(modified_source, original_tree, py_parser)
+    incremental_tree = parse_source_incremental(
+        modified_source, original_tree, py_parser
+    )
 
     # Verify the new tree reflects the changes
     assert incremental_tree is not None

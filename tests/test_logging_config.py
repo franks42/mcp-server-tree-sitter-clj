@@ -132,8 +132,12 @@ def test_log_level_setting(test_project):
                 print(f"INFO logs: {logs}")
 
                 # Should not contain the DEBUG message but should contain INFO
-                assert "This debug message should be filtered out" not in logs, "DEBUG messages should be filtered"
-                assert "This info message should be included" in logs, "INFO messages should be included"
+                assert (
+                    "This debug message should be filtered out" not in logs
+                ), "DEBUG messages should be filtered"
+                assert (
+                    "This info message should be included" in logs
+                ), "INFO messages should be included"
 
     finally:
         # Restore original log level
@@ -143,15 +147,19 @@ def test_log_level_setting(test_project):
 def test_log_level_in_yaml_config():
     """Test that log_level can be configured via YAML."""
     # Create a temporary YAML file
-    with tempfile.NamedTemporaryFile(suffix=".yaml", mode="w+", delete=False) as temp_file:
+    with tempfile.NamedTemporaryFile(
+        suffix=".yaml", mode="w+", delete=False
+    ) as temp_file:
         # Write a configuration with explicit log level
-        temp_file.write("""
+        temp_file.write(
+            """
 log_level: DEBUG
 
 cache:
   enabled: true
   max_size_mb: 100
-""")
+"""
+        )
         temp_file.flush()
         temp_file_path = temp_file.name
 

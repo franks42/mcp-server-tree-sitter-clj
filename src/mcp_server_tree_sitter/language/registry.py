@@ -78,7 +78,9 @@ class LanguageRegistry:
                     logger.warning(f"Failed to pre-load language {lang}: {e}")
         except ImportError:
             # If dependency container isn't available yet, just skip this step
-            logger.warning("Skipping pre-loading of languages due to missing dependencies")
+            logger.warning(
+                "Skipping pre-loading of languages due to missing dependencies"
+            )
 
     def language_for_file(self, file_path: str) -> Optional[str]:
         """

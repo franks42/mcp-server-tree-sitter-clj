@@ -123,7 +123,9 @@ def test_server_lifecycle() -> None:
         importlib.reload(mcp_server_tree_sitter.api)
 
         # Get the project registry from the reloaded module
-        from mcp_server_tree_sitter.api import get_project_registry as new_get_project_registry
+        from mcp_server_tree_sitter.api import (
+            get_project_registry as new_get_project_registry,
+        )
 
         new_project_registry = new_get_project_registry()
 

@@ -78,7 +78,9 @@ def test_cursor_ast_implementation(test_project, diagnostic) -> None:
         # Add results to diagnostic data
         diagnostic.add_detail("cursor_ast_keys", list(cursor_ast.keys()))
         diagnostic.add_detail("cursor_ast_type", cursor_ast["type"])
-        diagnostic.add_detail("cursor_ast_children_count", cursor_ast.get("children_count", 0))
+        diagnostic.add_detail(
+            "cursor_ast_children_count", cursor_ast.get("children_count", 0)
+        )
 
         # Basic validation
         assert "id" in cursor_ast, "AST should include node ID"
@@ -91,9 +93,13 @@ def test_cursor_ast_implementation(test_project, diagnostic) -> None:
             function_node = cursor_ast["children"][0]
             diagnostic.add_detail("function_node_keys", list(function_node.keys()))
             diagnostic.add_detail("function_node_type", function_node["type"])
-            diagnostic.add_detail("function_node_children_count", function_node.get("children_count", 0))
+            diagnostic.add_detail(
+                "function_node_children_count", function_node.get("children_count", 0)
+            )
 
-            assert function_node["type"] == "function_definition", "Expected function definition"
+            assert (
+                function_node["type"] == "function_definition"
+            ), "Expected function definition"
 
             # Check if children are properly included
             assert "children" in function_node, "Function should have children"
@@ -103,9 +109,13 @@ def test_cursor_ast_implementation(test_project, diagnostic) -> None:
             if "text" in function_node:
                 # Check for 'hello' in the text, handling both string and bytes
                 if isinstance(function_node["text"], bytes):
-                    assert b"hello" in function_node["text"], "Function text should contain 'hello'"
+                    assert (
+                        b"hello" in function_node["text"]
+                    ), "Function text should contain 'hello'"
                 else:
-                    assert "hello" in function_node["text"], "Function text should contain 'hello'"
+                    assert (
+                        "hello" in function_node["text"]
+                    ), "Function text should contain 'hello'"
 
         # Success!
         diagnostic.add_detail("cursor_ast_success", True)
@@ -198,7 +208,9 @@ if __name__ == "__main__":
 
         # Add results to diagnostic data
         diagnostic.add_detail("large_ast_type", cursor_ast["type"])
-        diagnostic.add_detail("large_ast_children_count", cursor_ast.get("children_count", 0))
+        diagnostic.add_detail(
+            "large_ast_children_count", cursor_ast.get("children_count", 0)
+        )
 
         # Find class and function counts
         class_nodes = []

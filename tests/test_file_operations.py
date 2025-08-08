@@ -47,7 +47,9 @@ def test_project() -> Generator[Dict[str, Any], None, None]:
         # A large file
         large_file = project_path / "large.log"
         with open(large_file, "w") as f:
-            f.write("Line " + "x" * 100 + "\n" * 1000)  # 1000 lines with 100+ chars each
+            f.write(
+                "Line " + "x" * 100 + "\n" * 1000
+            )  # 1000 lines with 100+ chars each
 
         # A hidden file and directory
         hidden_dir = project_path / ".hidden"
@@ -207,7 +209,9 @@ def test_get_file_content_with_line_limits(test_project):
     # Verify only first two lines are returned
     assert "def hello()" in content  # Note the space - looking for function definition
     assert "print('Hello, world!')" in content
-    assert "\nhello()" not in content  # Look for newline + hello() to find the function call line
+    assert (
+        "\nhello()" not in content
+    )  # Look for newline + hello() to find the function call line
 
     # Get content with start_line
     content = get_file_content(project, test_project["files"]["python"], start_line=2)

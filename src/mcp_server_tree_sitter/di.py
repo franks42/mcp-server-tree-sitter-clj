@@ -29,7 +29,8 @@ class DependencyContainer:
         self.project_registry = ProjectRegistry()
         self.language_registry = LanguageRegistry()
         self.tree_cache = TreeCache(
-            max_size_mb=self._config.cache.max_size_mb, ttl_seconds=self._config.cache.ttl_seconds
+            max_size_mb=self._config.cache.max_size_mb,
+            ttl_seconds=self._config.cache.ttl_seconds,
         )
 
         # Storage for any additional dependencies

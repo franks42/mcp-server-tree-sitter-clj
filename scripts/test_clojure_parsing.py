@@ -95,9 +95,7 @@ def performance_test(file_path: str):
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Test Clojure parsing capabilities"
-    )
+    parser = argparse.ArgumentParser(description="Test Clojure parsing capabilities")
     parser.add_argument(
         "--file",
         default="/tmp/clojure-test-project/src/mcp_nrepl_proxy/core.clj",

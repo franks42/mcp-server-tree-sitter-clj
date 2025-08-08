@@ -33,7 +33,9 @@ from mcp_server_tree_sitter.tools.analysis import (
     extract_symbols,
     find_dependencies,
 )
-from mcp_server_tree_sitter.tools.ast_operations import find_node_at_position as ast_find_node_at_position
+from mcp_server_tree_sitter.tools.ast_operations import (
+    find_node_at_position as ast_find_node_at_position,
+)
 from mcp_server_tree_sitter.tools.ast_operations import get_file_ast as ast_get_file_ast
 from mcp_server_tree_sitter.tools.file_operations import (
     get_file_content,
@@ -69,7 +71,9 @@ def temp_config(**kwargs):
             container.tree_cache.set_enabled(value)
 
         if key == "cache.max_size_mb":
-            original_values["tree_cache.max_size_mb"] = container.tree_cache._get_max_size_mb()
+            original_values["tree_cache.max_size_mb"] = (
+                container.tree_cache._get_max_size_mb()
+            )
             container.tree_cache.set_max_size_mb(value)
 
         # Handle log level specially
@@ -126,7 +130,9 @@ def temp_config(**kwargs):
 
 
 # Project Management Tools
-def register_project_tool(path: str, name: Optional[str] = None, description: Optional[str] = None) -> Dict[str, Any]:
+def register_project_tool(
+    path: str, name: Optional[str] = None, description: Optional[str] = None
+) -> Dict[str, Any]:
     """Register a project directory for code exploration."""
     return api_register_project(path, name, description)
 
@@ -176,13 +182,22 @@ def list_files(
 ) -> List[str]:
     """List files in a project."""
     project_registry = get_project_registry()
-    return list_project_files(project_registry.get_project(project), pattern, max_depth, extensions)
+    return list_project_files(
+        project_registry.get_project(project), pattern, max_depth, extensions
+    )
 
 
-def get_file(project: str, path: str, max_lines: Optional[int] = None, start_line: int = 0) -> str:
+def get_file(
+    project: str, path: str, max_lines: Optional[int] = None, start_line: int = 0
+) -> str:
     """Get content of a file."""
     project_registry = get_project_registry()
-    return get_file_content(project_registry.get_project(project), path, max_lines=max_lines, start_line=start_line)
+    return get_file_content(
+        project_registry.get_project(project),
+        path,
+        max_lines=max_lines,
+        start_line=start_line,
+    )
 
 
 def get_file_metadata(project: str, path: str) -> Dict[str, Any]:
@@ -192,7 +207,9 @@ def get_file_metadata(project: str, path: str) -> Dict[str, Any]:
 
 
 # AST Analysis
-def get_ast(project: str, path: str, max_depth: Optional[int] = None, include_text: bool = True) -> Dict[str, Any]:
+def get_ast(
+    project: str, path: str, max_depth: Optional[int] = None, include_text: bool = True
+) -> Dict[str, Any]:
     """Get abstract syntax tree for a file."""
     project_registry = get_project_registry()
     language_registry = get_language_registry()
@@ -211,7 +228,9 @@ def get_ast(project: str, path: str, max_depth: Optional[int] = None, include_te
     )
 
 
-def get_node_at_position(project: str, path: str, row: int, column: int) -> Optional[Dict[str, Any]]:
+def get_node_at_position(
+    project: str, path: str, row: int, column: int
+) -> Optional[Dict[str, Any]]:
     """Find the AST node at a specific position."""
     from mcp_server_tree_sitter.models.ast import node_to_dict
 
@@ -226,7 +245,9 @@ def get_node_at_position(project: str, path: str, row: int, column: int) -> Opti
 
     from mcp_server_tree_sitter.tools.ast_operations import parse_file
 
-    tree, source_bytes = parse_file(file_path, language, language_registry, get_tree_cache())
+    tree, source_bytes = parse_file(
+        file_path, language, language_registry, get_tree_cache()
+    )
 
     node = ast_find_node_at_position(tree.root_node, row, column)
     if node:
@@ -301,7 +322,9 @@ def list_query_templates_tool(language: Optional[str] = None) -> Dict[str, Any]:
     return list_query_templates(language)
 
 
-def build_query(language: str, patterns: List[str], combine: str = "or") -> Dict[str, str]:
+def build_query(
+    language: str, patterns: List[str], combine: str = "or"
+) -> Dict[str, str]:
     """Build a tree-sitter query from templates or patterns."""
     query = build_compound_query(language, patterns, combine)
     return {
@@ -334,15 +357,24 @@ def get_symbols(
     project_registry = get_project_registry()
     language_registry = get_language_registry()
 
-    return extract_symbols(project_registry.get_project(project), file_path, language_registry, symbol_types)
+    return extract_symbols(
+        project_registry.get_project(project),
+        file_path,
+        language_registry,
+        symbol_types,
+    )
 
 
-def analyze_project(project: str, scan_depth: int = 3, ctx: Optional[Any] = None) -> Dict[str, Any]:
+def analyze_project(
+    project: str, scan_depth: int = 3, ctx: Optional[Any] = None
+) -> Dict[str, Any]:
     """Analyze overall project structure."""
     project_registry = get_project_registry()
     language_registry = get_language_registry()
 
-    return analyze_project_structure(project_registry.get_project(project), language_registry, scan_depth, ctx)
+    return analyze_project_structure(
+        project_registry.get_project(project), language_registry, scan_depth, ctx
+    )
 
 
 def get_dependencies(project: str, file_path: str) -> Dict[str, List[str]]:
@@ -433,11 +465,20 @@ def find_usage(
     )
     """
 
-    return query_code(project_registry.get_project(project), query, language_registry, tree_cache, file_path, language)
+    return query_code(
+        project_registry.get_project(project),
+        query,
+        language_registry,
+        tree_cache,
+        file_path,
+        language,
+    )
 
 
 # Cache Management
-def clear_cache(project: Optional[str] = None, file_path: Optional[str] = None) -> Dict[str, str]:
+def clear_cache(
+    project: Optional[str] = None, file_path: Optional[str] = None
+) -> Dict[str, str]:
     """Clear the parse tree cache."""
     return api_clear_cache(project, file_path)
 
@@ -478,7 +519,9 @@ def configure(
             # Set the root logger for the package
             root_logger = logging.getLogger("mcp_server_tree_sitter")
             root_logger.setLevel(log_level_value)
-            logging.info(f"Applied log level {log_level} to mcp_server_tree_sitter loggers")
+            logging.info(
+                f"Applied log level {log_level} to mcp_server_tree_sitter loggers"
+            )
 
     # Return current config as dict
     return config_manager.to_dict()

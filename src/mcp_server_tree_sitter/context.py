@@ -51,7 +51,9 @@ class ServerContext:
         """Register a project for code analysis."""
         try:
             # Register project
-            project = self.project_registry.register_project(name or path, path, description)
+            project = self.project_registry.register_project(
+                name or path, path, description
+            )
 
             # Scan for languages
             project.scan_files(self.language_registry)
@@ -70,7 +72,9 @@ class ServerContext:
         return {"status": "success", "message": f"Project '{name}' removed"}
 
     # Cache management methods
-    def clear_cache(self, project: Optional[str] = None, file_path: Optional[str] = None) -> Dict[str, str]:
+    def clear_cache(
+        self, project: Optional[str] = None, file_path: Optional[str] = None
+    ) -> Dict[str, str]:
         """Clear the parse tree cache."""
         if project and file_path:
             # Get file path
@@ -79,7 +83,10 @@ class ServerContext:
 
             # Clear cache
             self.tree_cache.invalidate(abs_path)
-            return {"status": "success", "message": f"Cache cleared for {file_path} in {project}"}
+            return {
+                "status": "success",
+                "message": f"Cache cleared for {file_path} in {project}",
+            }
         else:
             # Clear all
             self.tree_cache.invalidate()
@@ -107,7 +114,9 @@ class ServerContext:
 
         if max_file_size_mb is not None:
             logger.info(f"Setting security.max_file_size_mb to {max_file_size_mb}")
-            self.config_manager.update_value("security.max_file_size_mb", max_file_size_mb)
+            self.config_manager.update_value(
+                "security.max_file_size_mb", max_file_size_mb
+            )
 
         if log_level is not None:
             logger.info(f"Setting log_level to {log_level}")
@@ -115,7 +124,9 @@ class ServerContext:
 
             # Apply log level using centralized bootstrap function
             update_log_levels(log_level)
-            logger.debug(f"Applied log level {log_level} to mcp_server_tree_sitter loggers")
+            logger.debug(
+                f"Applied log level {log_level} to mcp_server_tree_sitter loggers"
+            )
 
         # Return current config as dict
         return self.config_manager.to_dict()

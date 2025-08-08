@@ -194,7 +194,9 @@ def test_rust_ast_parsing(rust_project) -> None:
     # Check for Person struct - handle both bytes and strings
     person_found = False
     for name in structs_found:
-        if (isinstance(name, bytes) and b"Person" in name) or (isinstance(name, str) and "Person" in name):
+        if (isinstance(name, bytes) and b"Person" in name) or (
+            isinstance(name, str) and "Person" in name
+        ):
             person_found = True
             break
     assert person_found, "Should find Person struct"
@@ -202,7 +204,9 @@ def test_rust_ast_parsing(rust_project) -> None:
     main_found = False
     calc_found = False
     for name in functions_found:
-        if (isinstance(name, bytes) and b"main" in name) or (isinstance(name, str) and "main" in name):
+        if (isinstance(name, bytes) and b"main" in name) or (
+            isinstance(name, str) and "main" in name
+        ):
             main_found = True
         if (isinstance(name, bytes) and b"calculate_ages" in name) or (
             isinstance(name, str) and "calculate_ages" in name
@@ -231,7 +235,9 @@ def test_rust_symbol_extraction(rust_project) -> None:
     # Check for Person struct - handle both bytes and strings
     person_found = False
     for name in struct_names:
-        if (isinstance(name, bytes) and b"Person" in name) or (isinstance(name, str) and "Person" in name):
+        if (isinstance(name, bytes) and b"Person" in name) or (
+            isinstance(name, str) and "Person" in name
+        ):
             person_found = True
             break
     assert person_found, "Should find Person struct"
@@ -239,7 +245,9 @@ def test_rust_symbol_extraction(rust_project) -> None:
     main_found = False
     calc_found = False
     for name in function_names:
-        if (isinstance(name, bytes) and b"main" in name) or (isinstance(name, str) and "main" in name):
+        if (isinstance(name, bytes) and b"main" in name) or (
+            isinstance(name, str) and "main" in name
+        ):
             main_found = True
         if (isinstance(name, bytes) and b"calculate_ages" in name) or (
             isinstance(name, str) and "calculate_ages" in name
@@ -410,13 +418,19 @@ fn main() {
     macro_found = False
 
     for name in traits_found:
-        if (isinstance(name, bytes) and b"Display" in name) or (isinstance(name, str) and "Display" in name):
+        if (isinstance(name, bytes) and b"Display" in name) or (
+            isinstance(name, str) and "Display" in name
+        ):
             display_found = True
-        if (isinstance(name, bytes) and b"Calculate" in name) or (isinstance(name, str) and "Calculate" in name):
+        if (isinstance(name, bytes) and b"Calculate" in name) or (
+            isinstance(name, str) and "Calculate" in name
+        ):
             calculate_found = True
 
     for name in macros_found:
-        if (isinstance(name, bytes) and b"create_value" in name) or (isinstance(name, str) and "create_value" in name):
+        if (isinstance(name, bytes) and b"create_value" in name) or (
+            isinstance(name, str) and "create_value" in name
+        ):
             macro_found = True
 
     assert display_found, "Should find Display trait"

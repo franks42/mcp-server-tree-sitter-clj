@@ -81,7 +81,10 @@ def search_text(
                     # Simple case-insensitive search - check both original and stripped versions
                     line_lower = line.lower()
                     pattern_lower = pattern.lower()
-                    match = pattern_lower in line_lower or pattern_lower.strip() in line_lower.strip()
+                    match = (
+                        pattern_lower in line_lower
+                        or pattern_lower.strip() in line_lower.strip()
+                    )
 
                 if match:
                     # Calculate context lines
@@ -248,7 +251,11 @@ def query_code(
                     elif hasattr(match, "node") and hasattr(match, "capture_name"):
                         # Object with node and capture_name attributes
                         node, capture_name = match.node, match.capture_name
-                    elif isinstance(match, dict) and "node" in match and "capture" in match:
+                    elif (
+                        isinstance(match, dict)
+                        and "node" in match
+                        and "capture" in match
+                    ):
                         # Dictionary with node and capture keys
                         node, capture_name = match["node"], match["capture"]
                     else:
@@ -288,7 +295,11 @@ def query_code(
             raise QueryError("Language is required when file_path is not provided")
 
         # Find all matching files for the language
-        extensions = [(ext, lang) for ext, lang in language_registry._language_map.items() if lang == language]
+        extensions = [
+            (ext, lang)
+            for ext, lang in language_registry._language_map.items()
+            if lang == language
+        ]
 
         if not extensions:
             raise QueryError(f"No file extensions found for language {language}")

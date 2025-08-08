@@ -162,7 +162,9 @@ def test_symbol_extraction_diagnostics(test_project) -> None:
 
     project = get_project_registry().get_project(test_project["name"])
     language_registry = get_language_registry()
-    symbols_excluding_methods = extract_symbols(project, "test.py", language_registry, exclude_class_methods=True)
+    symbols_excluding_methods = extract_symbols(
+        project, "test.py", language_registry, exclude_class_methods=True
+    )
 
     # Verify the result structure
     assert "functions" in symbols, "Result should contain 'functions' key"
@@ -182,7 +184,10 @@ def test_symbol_extraction_diagnostics(test_project) -> None:
     expected_import_count = 4  # os, sys, typing, datetime
 
     # Verify extracted symbols
-    if symbols_excluding_methods["functions"] and len(symbols_excluding_methods["functions"]) > 0:
+    if (
+        symbols_excluding_methods["functions"]
+        and len(symbols_excluding_methods["functions"]) > 0
+    ):
         # Instead of checking exact counts, just verify we found the main functions
         function_names = [f["name"] for f in symbols_excluding_methods["functions"]]
 
@@ -207,12 +212,16 @@ def test_symbol_extraction_diagnostics(test_project) -> None:
         assert process_data_found, "Expected to find 'process_data' function"
         assert calculate_age_found, "Expected to find 'calculate_age' function"
     else:
-        print(f"KNOWN ISSUE: Expected {expected_function_count} functions, but got empty list")
+        print(
+            f"KNOWN ISSUE: Expected {expected_function_count} functions, but got empty list"
+        )
 
     if symbols["classes"] and len(symbols["classes"]) > 0:
         assert len(symbols["classes"]) == expected_class_count
     else:
-        print(f"KNOWN ISSUE: Expected {expected_class_count} classes, but got empty list")
+        print(
+            f"KNOWN ISSUE: Expected {expected_class_count} classes, but got empty list"
+        )
 
     if symbols["imports"] and len(symbols["imports"]) > 0:
         # Our improved import detection now finds individual import names plus the statements
@@ -220,11 +229,14 @@ def test_symbol_extraction_diagnostics(test_project) -> None:
         import_texts = [imp.get("name", "") for imp in symbols["imports"]]
         for module in ["os", "sys", "typing", "datetime"]:
             assert any(
-                (isinstance(text, bytes) and module.encode() in text) or (isinstance(text, str) and module in text)
+                (isinstance(text, bytes) and module.encode() in text)
+                or (isinstance(text, str) and module in text)
                 for text in import_texts
             ), f"Should find '{module}' import"
     else:
-        print(f"KNOWN ISSUE: Expected {expected_import_count} imports, but got empty list")
+        print(
+            f"KNOWN ISSUE: Expected {expected_import_count} imports, but got empty list"
+        )
 
     # Now check the second file to ensure results are consistent
     symbols_utils = get_symbols(project=test_project["name"], file_path="utils.py")
@@ -254,18 +266,25 @@ def test_dependency_analysis_diagnostics(test_project) -> None:
             # Modify test to be more flexible with datetime imports
             for dep in ["os", "sys", "typing"]:
                 assert any(
-                    (isinstance(mod, bytes) and dep.encode() in mod) or (isinstance(mod, str) and dep in mod)
+                    (isinstance(mod, bytes) and dep.encode() in mod)
+                    or (isinstance(mod, str) and dep in mod)
                     for mod in dependencies["module"]
                 ), f"Expected dependency '{dep}' not found"
         else:
             # Otherwise check in the entire dependencies dictionary
             for dep in expected_dependencies:
-                assert dep in str(dependencies), f"Expected dependency '{dep}' not found"
+                assert dep in str(
+                    dependencies
+                ), f"Expected dependency '{dep}' not found"
     else:
-        print(f"KNOWN ISSUE: Expected dependencies {expected_dependencies}, but got empty result")
+        print(
+            f"KNOWN ISSUE: Expected dependencies {expected_dependencies}, but got empty result"
+        )
 
     # Check the second file for consistency
-    dependencies_utils = get_dependencies(project=test_project["name"], file_path="utils.py")
+    dependencies_utils = get_dependencies(
+        project=test_project["name"], file_path="utils.py"
+    )
 
     print("\nDependency analysis results for utils.py:")
     print(f"Dependencies: {dependencies_utils}")
@@ -310,7 +329,9 @@ def test_symbol_extraction_with_ast_access(test_project) -> None:
                                 "name": child.get("text"),
                                 "path": path,
                                 "node_id": node.get("id"),
-                                "text": node.get("text", "").split("\n")[0][:50],  # First line, truncated
+                                "text": node.get("text", "").split("\n")[0][
+                                    :50
+                                ],  # First line, truncated
                             }
                         )
                         break
@@ -326,7 +347,9 @@ def test_symbol_extraction_with_ast_access(test_project) -> None:
                                 "name": child.get("text"),
                                 "path": path,
                                 "node_id": node.get("id"),
-                                "text": node.get("text", "").split("\n")[0][:50],  # First line, truncated
+                                "text": node.get("text", "").split("\n")[0][
+                                    :50
+                                ],  # First line, truncated
                             }
                         )
                         break
@@ -373,7 +396,9 @@ def test_symbol_extraction_with_ast_access(test_project) -> None:
     symbols = get_symbols(project=test_project["name"], file_path="test.py")
 
     print("\nComparison with get_symbols:")
-    print(f"Manual functions: {len(functions)}, get_symbols: {len(symbols['functions'])}")
+    print(
+        f"Manual functions: {len(functions)}, get_symbols: {len(symbols['functions'])}"
+    )
     print(f"Manual classes: {len(classes)}, get_symbols: {len(symbols['classes'])}")
     print(f"Manual imports: {len(imports)}, get_symbols: {len(symbols['imports'])}")
 
@@ -459,7 +484,11 @@ def test_query_based_symbol_extraction(test_project) -> None:
                 for capture_name, nodes in captures.items():
                     if capture_name == target_type:
                         for node in nodes:
-                            name = node.text.decode("utf-8") if hasattr(node.text, "decode") else str(node.text)
+                            name = (
+                                node.text.decode("utf-8")
+                                if hasattr(node.text, "decode")
+                                else str(node.text)
+                            )
                             result_dict[name] = {
                                 "name": name,
                                 "start": node.start_point,
@@ -478,13 +507,21 @@ def test_query_based_symbol_extraction(test_project) -> None:
                                 continue  # Skip if unexpected tuple size
                         elif hasattr(item, "node") and hasattr(item, "capture_name"):
                             node, capture_name = item.node, item.capture_name
-                        elif isinstance(item, dict) and "node" in item and "capture" in item:
+                        elif (
+                            isinstance(item, dict)
+                            and "node" in item
+                            and "capture" in item
+                        ):
                             node, capture_name = item["node"], item["capture"]
                         else:
                             continue  # Skip if format unknown
 
                         if capture_name == target_type:
-                            name = node.text.decode("utf-8") if hasattr(node.text, "decode") else str(node.text)
+                            name = (
+                                node.text.decode("utf-8")
+                                if hasattr(node.text, "decode")
+                                else str(node.text)
+                            )
                             result_dict[name] = {
                                 "name": name,
                                 "start": node.start_point,
@@ -505,7 +542,11 @@ def test_query_based_symbol_extraction(test_project) -> None:
                 for capture_name, nodes in captures.items():
                     if capture_name in ("import.module", "import.from", "import.item"):
                         for node in nodes:
-                            name = node.text.decode("utf-8") if hasattr(node.text, "decode") else str(node.text)
+                            name = (
+                                node.text.decode("utf-8")
+                                if hasattr(node.text, "decode")
+                                else str(node.text)
+                            )
                             imports[name] = {
                                 "name": name,
                                 "type": capture_name,
@@ -525,7 +566,11 @@ def test_query_based_symbol_extraction(test_project) -> None:
                                 continue  # Skip if unexpected tuple size
                         elif hasattr(item, "node") and hasattr(item, "capture_name"):
                             node, capture_name = item.node, item.capture_name
-                        elif isinstance(item, dict) and "node" in item and "capture" in item:
+                        elif (
+                            isinstance(item, dict)
+                            and "node" in item
+                            and "capture" in item
+                        ):
                             node, capture_name = item["node"], item["capture"]
                         else:
                             continue  # Skip if format unknown
@@ -535,7 +580,11 @@ def test_query_based_symbol_extraction(test_project) -> None:
                             "import.from",
                             "import.item",
                         ):
-                            name = node.text.decode("utf-8") if hasattr(node.text, "decode") else str(node.text)
+                            name = (
+                                node.text.decode("utf-8")
+                                if hasattr(node.text, "decode")
+                                else str(node.text)
+                            )
                             imports[name] = {
                                 "name": name,
                                 "type": capture_name,
@@ -558,7 +607,9 @@ def test_query_based_symbol_extraction(test_project) -> None:
         symbols = get_symbols(project=test_project["name"], file_path="test.py")
 
         print("\nComparison with get_symbols:")
-        print(f"Query functions: {len(functions)}, get_symbols: {len(symbols['functions'])}")
+        print(
+            f"Query functions: {len(functions)}, get_symbols: {len(symbols['functions'])}"
+        )
         print(f"Query classes: {len(classes)}, get_symbols: {len(symbols['classes'])}")
         print(f"Query imports: {len(imports)}, get_symbols: {len(symbols['imports'])}")
 
@@ -584,7 +635,9 @@ def test_debug_file_saving(test_project) -> None:
     os.makedirs(debug_dir, exist_ok=True)
 
     # Get AST and symbol information
-    ast_result = get_ast(project=test_project["name"], path="test.py", max_depth=10, include_text=True)
+    ast_result = get_ast(
+        project=test_project["name"], path="test.py", max_depth=10, include_text=True
+    )
 
     symbols = get_symbols(project=test_project["name"], file_path="test.py")
 

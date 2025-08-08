@@ -47,12 +47,18 @@ def test_debug_flag_with_preexisting_env():
         update_log_levels("DEBUG")
 
         # Verify the change was applied
-        assert pkg_logger.level == logging.DEBUG, "Logger level should be changed to DEBUG"
-        assert test_handler.level == logging.DEBUG, "Handler level should be changed to DEBUG"
+        assert (
+            pkg_logger.level == logging.DEBUG
+        ), "Logger level should be changed to DEBUG"
+        assert (
+            test_handler.level == logging.DEBUG
+        ), "Handler level should be changed to DEBUG"
 
         # Verify that new loggers created after updating will inherit the correct level
         new_logger = logging.getLogger("mcp_server_tree_sitter.test.new_module")
-        assert new_logger.getEffectiveLevel() == logging.DEBUG, "New loggers should inherit DEBUG level"
+        assert (
+            new_logger.getEffectiveLevel() == logging.DEBUG
+        ), "New loggers should inherit DEBUG level"
 
     finally:
         # Cleanup
@@ -97,23 +103,41 @@ def test_update_log_levels_reconfigures_root_logger():
         pkg_logger.setLevel(logging.INFO)
 
         # Verify initial levels
-        assert root_logger.level == logging.INFO, "Root logger should start at INFO level"
-        assert pkg_logger.level == logging.INFO, "Package logger should start at INFO level"
-        assert root_handler.level == logging.INFO, "Root handler should start at INFO level"
-        assert pkg_handler.level == logging.INFO, "Package handler should start at INFO level"
+        assert (
+            root_logger.level == logging.INFO
+        ), "Root logger should start at INFO level"
+        assert (
+            pkg_logger.level == logging.INFO
+        ), "Package logger should start at INFO level"
+        assert (
+            root_handler.level == logging.INFO
+        ), "Root handler should start at INFO level"
+        assert (
+            pkg_handler.level == logging.INFO
+        ), "Package handler should start at INFO level"
 
         # Call update_log_levels with DEBUG
         update_log_levels("DEBUG")
 
         # Verify all loggers and handlers are updated
-        assert root_logger.level == logging.DEBUG, "Root logger should be updated to DEBUG level"
-        assert pkg_logger.level == logging.DEBUG, "Package logger should be updated to DEBUG level"
-        assert root_handler.level == logging.DEBUG, "Root handler should be updated to DEBUG level"
-        assert pkg_handler.level == logging.DEBUG, "Package handler should be updated to DEBUG level"
+        assert (
+            root_logger.level == logging.DEBUG
+        ), "Root logger should be updated to DEBUG level"
+        assert (
+            pkg_logger.level == logging.DEBUG
+        ), "Package logger should be updated to DEBUG level"
+        assert (
+            root_handler.level == logging.DEBUG
+        ), "Root handler should be updated to DEBUG level"
+        assert (
+            pkg_handler.level == logging.DEBUG
+        ), "Package handler should be updated to DEBUG level"
 
         # Test with a new child logger
         child_logger = logging.getLogger("mcp_server_tree_sitter.test.child")
-        assert child_logger.getEffectiveLevel() == logging.DEBUG, "Child logger should inherit DEBUG level from parent"
+        assert (
+            child_logger.getEffectiveLevel() == logging.DEBUG
+        ), "Child logger should inherit DEBUG level from parent"
 
     finally:
         # Clean up
@@ -144,11 +168,15 @@ def test_environment_variable_updates_log_level():
 
         # Update log levels and verify the logger is set to DEBUG
         update_log_levels("DEBUG")
-        assert pkg_logger.level == logging.DEBUG, f"Logger level should be DEBUG but was {pkg_logger.level}"
+        assert (
+            pkg_logger.level == logging.DEBUG
+        ), f"Logger level should be DEBUG but was {pkg_logger.level}"
 
         # Check handler levels are synchronized
         for handler in pkg_logger.handlers:
-            assert handler.level == logging.DEBUG, f"Handler level should be DEBUG but was {handler.level}"
+            assert (
+                handler.level == logging.DEBUG
+            ), f"Handler level should be DEBUG but was {handler.level}"
 
         # Next test with INFO level
         os.environ["MCP_TS_LOG_LEVEL"] = "INFO"
@@ -159,11 +187,15 @@ def test_environment_variable_updates_log_level():
 
         # Update log levels and verify the logger is set to INFO
         update_log_levels("INFO")
-        assert pkg_logger.level == logging.INFO, f"Logger level should be INFO but was {pkg_logger.level}"
+        assert (
+            pkg_logger.level == logging.INFO
+        ), f"Logger level should be INFO but was {pkg_logger.level}"
 
         # Check handler levels are synchronized
         for handler in pkg_logger.handlers:
-            assert handler.level == logging.INFO, f"Handler level should be INFO but was {handler.level}"
+            assert (
+                handler.level == logging.INFO
+            ), f"Handler level should be INFO but was {handler.level}"
 
     finally:
         # Restore original environment
@@ -211,23 +243,25 @@ def test_configure_root_logger_syncs_handlers():
         configure_root_logger()
 
         # Verify the root package logger is set to DEBUG
-        assert pkg_logger.level == logging.DEBUG, (
-            f"Root package logger level should be DEBUG but was {pkg_logger.level}"
-        )
+        assert (
+            pkg_logger.level == logging.DEBUG
+        ), f"Root package logger level should be DEBUG but was {pkg_logger.level}"
 
         # Verify child logger still has its original level (should not be explicitly set)
-        assert test_logger.level == original_test_level, (
-            "Child logger level should not be changed by configure_root_logger"
-        )
+        assert (
+            test_logger.level == original_test_level
+        ), "Child logger level should not be changed by configure_root_logger"
 
         # Verify child logger's effective level is inherited from root package logger
-        assert test_logger.getEffectiveLevel() == logging.DEBUG, (
-            f"Child logger effective level should be DEBUG but was {test_logger.getEffectiveLevel()}"
-        )
+        assert (
+            test_logger.getEffectiveLevel() == logging.DEBUG
+        ), f"Child logger effective level should be DEBUG but was {test_logger.getEffectiveLevel()}"
 
         # Verify all handlers of the test logger are synchronized to DEBUG
         for handler in test_logger.handlers:
-            assert handler.level == logging.DEBUG, f"Handler level should be DEBUG but was {handler.level}"
+            assert (
+                handler.level == logging.DEBUG
+            ), f"Handler level should be DEBUG but was {handler.level}"
 
     finally:
         # Clean up
@@ -290,11 +324,17 @@ def test_log_message_levels():
             log_content = log_output.getvalue()
 
             # Check for environment variable application messages
-            env_messages = [line for line in log_content.splitlines() if "Applied environment variable" in line]
+            env_messages = [
+                line
+                for line in log_content.splitlines()
+                if "Applied environment variable" in line
+            ]
 
             # Verify that these messages use DEBUG level, not INFO
             for msg in env_messages:
-                assert msg.startswith("DEBUG:"), f"Environment variable message should use DEBUG level but found: {msg}"
+                assert msg.startswith(
+                    "DEBUG:"
+                ), f"Environment variable message should use DEBUG level but found: {msg}"
 
             # Check if there are any environment variable messages at INFO level
             info_env_messages = [
@@ -303,9 +343,9 @@ def test_log_message_levels():
                 if "Applied environment variable" in line and line.startswith("INFO:")
             ]
 
-            assert not info_env_messages, (
-                f"No environment variable messages should use INFO level, but found: {info_env_messages}"
-            )
+            assert (
+                not info_env_messages
+            ), f"No environment variable messages should use INFO level, but found: {info_env_messages}"
 
         finally:
             # Restore original log level

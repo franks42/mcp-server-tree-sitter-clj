@@ -37,14 +37,18 @@ class SecurityConfig(BaseModel):
     """Security settings."""
 
     max_file_size_mb: int = 5
-    excluded_dirs: List[str] = Field(default_factory=lambda: [".git", "node_modules", "__pycache__"])
+    excluded_dirs: List[str] = Field(
+        default_factory=lambda: [".git", "node_modules", "__pycache__"]
+    )
     allowed_extensions: Optional[List[str]] = None  # None means all extensions allowed
 
 
 class LanguageConfig(BaseModel):
     """Language-specific configuration."""
 
-    auto_install: bool = False  # DEPRECATED: No longer used with tree-sitter-language-pack
+    auto_install: bool = (
+        False  # DEPRECATED: No longer used with tree-sitter-language-pack
+    )
     default_max_depth: int = 5  # Default depth for AST traversal
     preferred_languages: List[str] = Field(default_factory=list)
 
@@ -76,7 +80,9 @@ class ServerConfig(BaseModel):
             logger.debug(f"Loaded config data: {config_data}")
 
             if config_data is None:
-                logger.warning(f"Config file is empty or contains only comments: {path}")
+                logger.warning(
+                    f"Config file is empty or contains only comments: {path}"
+                )
                 return cls()
 
             # Create config from file
@@ -120,7 +126,9 @@ def update_config_from_env(config: ServerConfig) -> None:
     for env_name, env_value in env_vars.items():
         # Remove the prefix
         key = env_name[len(env_prefix) :]
-        logger.debug(f"Processing environment variable: {env_name}, key after prefix removal: {key}")
+        logger.debug(
+            f"Processing environment variable: {env_name}, key after prefix removal: {key}"
+        )
 
         # Single underscore format only (MCP_TS_CACHE_MAX_SIZE_MB)
         # If the config has a section matching the first part, use it
@@ -132,7 +140,9 @@ def update_config_from_env(config: ServerConfig) -> None:
             section = parts[0]
             # All remaining parts form the setting name
             setting = "_".join(parts[1:])
-            logger.debug(f"Single underscore format: section={section}, setting={setting}")
+            logger.debug(
+                f"Single underscore format: section={section}, setting={setting}"
+            )
         else:
             # No section match found, treat as top-level setting
             section = None
@@ -146,9 +156,13 @@ def update_config_from_env(config: ServerConfig) -> None:
                 orig_value = getattr(config, setting)
                 new_value = _convert_value(env_value, orig_value)
                 setattr(config, setting, new_value)
-                logger.debug(f"Applied environment variable {env_name} to {setting}: {orig_value} -> {new_value}")
+                logger.debug(
+                    f"Applied environment variable {env_name} to {setting}: {orig_value} -> {new_value}"
+                )
             else:
-                logger.warning(f"Unknown top-level setting in environment variable {env_name}: {setting}")
+                logger.warning(
+                    f"Unknown top-level setting in environment variable {env_name}: {setting}"
+                )
         elif hasattr(config, section):
             # Section setting
             section_obj = getattr(config, section)
@@ -161,7 +175,9 @@ def update_config_from_env(config: ServerConfig) -> None:
                     f"Applied environment variable {env_name} to {section}.{setting}: {orig_value} -> {new_value}"
                 )
             else:
-                logger.warning(f"Unknown setting {setting} in section {section} from environment variable {env_name}")
+                logger.warning(
+                    f"Unknown setting {setting} in section {section} from environment variable {env_name}"
+                )
 
 
 def _convert_value(value_str: str, current_value: Any) -> Any:
@@ -192,7 +208,9 @@ def _convert_value(value_str: str, current_value: Any) -> Any:
             return value_str
     except (ValueError, TypeError) as e:
         # If conversion fails, log a warning and return the original value
-        logger.warning(f"Failed to convert value '{value_str}' to type {type(current_value).__name__}: {e}")
+        logger.warning(
+            f"Failed to convert value '{value_str}' to type {type(current_value).__name__}: {e}"
+        )
         return current_value
 
 
@@ -253,7 +271,9 @@ class ConfigurationManager:
             self._logger.info(f"Loaded config data: {config_data}")
 
             if config_data is None:
-                self._logger.error(f"Config file is empty or contains only comments: {path}")
+                self._logger.error(
+                    f"Config file is empty or contains only comments: {path}"
+                )
                 return self._config
 
             # Debug output before update
@@ -264,11 +284,15 @@ class ConfigurationManager:
 
             # Better error handling for invalid YAML data
             if not isinstance(config_data, dict):
-                self._logger.error(f"YAML data is not a dictionary: {type(config_data)}")
+                self._logger.error(
+                    f"YAML data is not a dictionary: {type(config_data)}"
+                )
                 return self._config
 
             # Log the YAML structure
-            self._logger.info(f"YAML structure: {list(config_data.keys()) if config_data else 'None'}")
+            self._logger.info(
+                f"YAML structure: {list(config_data.keys()) if config_data else 'None'}"
+            )
 
             # Create new config from file data
             try:
@@ -295,7 +319,9 @@ class ConfigurationManager:
 
             # Apply environment variables AFTER loading YAML
             # This ensures environment variables have highest precedence
-            self._logger.info("Applying environment variables to override YAML settings")
+            self._logger.info(
+                "Applying environment variables to override YAML settings"
+            )
             update_config_from_env(self._config)
 
             # Log after applying environment variables to show final state
@@ -321,7 +347,9 @@ class ConfigurationManager:
 
                 # Update logging configuration using centralized bootstrap module
                 update_log_levels(self._config.log_level)
-                self._logger.debug(f"Applied log level {self._config.log_level} to mcp_server_tree_sitter loggers")
+                self._logger.debug(
+                    f"Applied log level {self._config.log_level} to mcp_server_tree_sitter loggers"
+                )
 
                 self._logger.info("Applied configuration to dependencies")
             except (ImportError, AttributeError) as e:
@@ -354,9 +382,13 @@ class ConfigurationManager:
                 if hasattr(section_obj, key):
                     old_value = getattr(section_obj, key)
                     setattr(section_obj, key, value)
-                    self._logger.debug(f"Updated config value {path} from {old_value} to {value}")
+                    self._logger.debug(
+                        f"Updated config value {path} from {old_value} to {value}"
+                    )
                 else:
-                    self._logger.warning(f"Unknown config key: {key} in section {section}")
+                    self._logger.warning(
+                        f"Unknown config key: {key} in section {section}"
+                    )
             else:
                 self._logger.warning(f"Unknown config section: {section}")
         else:
@@ -364,13 +396,17 @@ class ConfigurationManager:
             if hasattr(self._config, path):
                 old_value = getattr(self._config, path)
                 setattr(self._config, path, value)
-                self._logger.debug(f"Updated config value {path} from {old_value} to {value}")
+                self._logger.debug(
+                    f"Updated config value {path} from {old_value} to {value}"
+                )
 
                 # If updating log_level, apply it using centralized bootstrap function
                 if path == "log_level":
                     # Use centralized bootstrap module
                     update_log_levels(value)
-                    self._logger.debug(f"Applied log level {value} to mcp_server_tree_sitter loggers")
+                    self._logger.debug(
+                        f"Applied log level {value} to mcp_server_tree_sitter loggers"
+                    )
             else:
                 self._logger.warning(f"Unknown config path: {path}")
 
@@ -448,7 +484,9 @@ def update_config_from_new(original: ServerConfig, new: ServerConfig) -> None:
         original.security.max_file_size_mb = new.security.max_file_size_mb
         original.security.excluded_dirs = new.security.excluded_dirs.copy()
         if new.security.allowed_extensions:
-            original.security.allowed_extensions = new.security.allowed_extensions.copy()
+            original.security.allowed_extensions = (
+                new.security.allowed_extensions.copy()
+            )
         else:
             original.security.allowed_extensions = None
 
@@ -537,7 +575,9 @@ def load_config(config_path: Optional[str] = None) -> ServerConfig:
                     update_config_from_new(config, new_config)
 
                     # Debug output after update
-                    logger.info(f"Successfully loaded configuration from {path_to_load}")
+                    logger.info(
+                        f"Successfully loaded configuration from {path_to_load}"
+                    )
                     logger.debug(
                         f"Updated config: cache.max_size_mb = {config.cache.max_size_mb}, "
                         f"security.max_file_size_mb = {config.security.max_file_size_mb}"

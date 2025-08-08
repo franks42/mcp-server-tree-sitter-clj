@@ -82,7 +82,9 @@ def extract_symbols(
             queries[symbol_type] = template
 
     if not queries:
-        raise ValueError(f"No query templates available for {language} and {symbol_types}")
+        raise ValueError(
+            f"No query templates available for {language} and {symbol_types}"
+        )
 
     # Parse file and extract symbols
     try:
@@ -107,7 +109,9 @@ def extract_symbols(
             class_matches = class_query.captures(tree.root_node)
 
             # Process class locations to identify their boundaries
-            process_symbol_matches(class_matches, "classes", symbols, source_bytes, tree)
+            process_symbol_matches(
+                class_matches, "classes", symbols, source_bytes, tree
+            )
 
             # Extract class body ranges to check if functions are inside classes
             # Use a more generous range to ensure we catch all methods
@@ -115,7 +119,9 @@ def extract_symbols(
                 start_row = class_symbol["location"]["start"]["row"]
                 # For class end, we need to estimate where the class body might end
                 # by scanning the file for likely class boundaries
-                source_lines = source_bytes.decode("utf-8", errors="replace").splitlines()
+                source_lines = source_bytes.decode(
+                    "utf-8", errors="replace"
+                ).splitlines()
                 # Find a reasonable estimate for where the class ends
                 end_row = min(start_row + 30, len(source_lines) - 1)
                 class_ranges.append((start_row, end_row))
@@ -138,7 +144,11 @@ def extract_symbols(
                 symbols,
                 source_bytes,
                 tree,
-                (class_ranges if exclude_class_methods and symbol_type == "functions" else None),
+                (
+                    class_ranges
+                    if exclude_class_methods and symbol_type == "functions"
+                    else None
+                ),
             )
 
             # Handle aliased imports specifically for Python
@@ -162,7 +172,11 @@ def extract_symbols(
                         node, capture_name = match
                     elif hasattr(match, "node") and hasattr(match, "capture_name"):
                         node, capture_name = match.node, match.capture_name
-                    elif isinstance(match, dict) and "node" in match and "capture" in match:
+                    elif (
+                        isinstance(match, dict)
+                        and "node" in match
+                        and "capture" in match
+                    ):
                         node, capture_name = match["node"], match["capture"]
                     else:
                         continue
@@ -201,7 +215,11 @@ def extract_symbols(
                         node, capture_name = match
                     elif hasattr(match, "node") and hasattr(match, "capture_name"):
                         node, capture_name = match.node, match.capture_name
-                    elif isinstance(match, dict) and "node" in match and "capture" in match:
+                    elif (
+                        isinstance(match, dict)
+                        and "node" in match
+                        and "capture" in match
+                    ):
                         node, capture_name = match["node"], match["capture"]
                     else:
                         continue
@@ -213,7 +231,10 @@ def extract_symbols(
                         # Try to get the module name from parent
                         if node.parent and node.parent.parent:
                             for child in node.parent.parent.children:
-                                if hasattr(child, "type") and child.type == "dotted_name":
+                                if (
+                                    hasattr(child, "type")
+                                    and child.type == "dotted_name"
+                                ):
                                     module_name = get_node_text(child, source_bytes)
                                     break
 
@@ -322,12 +343,20 @@ def process_symbol_matches(
                             if child.type == "dotted_name":
                                 # First dotted_name is usually the module
                                 if module_name is None:
-                                    module_name = get_node_text(child, source_bytes, decode=True)
+                                    module_name = get_node_text(
+                                        child, source_bytes, decode=True
+                                    )
                                 # Look for the imported item
-                                elif item_name is None and safe_node.parent and safe_node.parent.children:
+                                elif (
+                                    item_name is None
+                                    and safe_node.parent
+                                    and safe_node.parent.children
+                                ):
                                     for item_child in safe_node.parent.children:
                                         if item_child.type == "dotted_name":
-                                            item_name = get_node_text(item_child, source_bytes, decode=True)
+                                            item_name = get_node_text(
+                                                item_child, source_bytes, decode=True
+                                            )
                                             break
 
                     # Create a descriptive name for the aliased import
@@ -341,20 +370,40 @@ def process_symbol_matches(
                             or isinstance(alias_text, bytes)
                         ):
                             module_name_str = (
-                                module_name.decode("utf-8") if isinstance(module_name, bytes) else module_name
+                                module_name.decode("utf-8")
+                                if isinstance(module_name, bytes)
+                                else module_name
                             )
-                            item_name_str = item_name.decode("utf-8") if isinstance(item_name, bytes) else item_name
-                            alias_text_str = alias_text.decode("utf-8") if isinstance(alias_text, bytes) else alias_text
-                            text = f"{module_name_str}.{item_name_str} as {alias_text_str}"
+                            item_name_str = (
+                                item_name.decode("utf-8")
+                                if isinstance(item_name, bytes)
+                                else item_name
+                            )
+                            alias_text_str = (
+                                alias_text.decode("utf-8")
+                                if isinstance(alias_text, bytes)
+                                else alias_text
+                            )
+                            text = (
+                                f"{module_name_str}.{item_name_str} as {alias_text_str}"
+                            )
                         else:
                             text = f"{module_name}.{item_name} as {alias_text}"
                     elif module_name:
                         # Handle both str and bytes cases
-                        if isinstance(module_name, bytes) or isinstance(alias_text, bytes):
+                        if isinstance(module_name, bytes) or isinstance(
+                            alias_text, bytes
+                        ):
                             module_name_str = (
-                                module_name.decode("utf-8") if isinstance(module_name, bytes) else module_name
+                                module_name.decode("utf-8")
+                                if isinstance(module_name, bytes)
+                                else module_name
                             )
-                            alias_text_str = alias_text.decode("utf-8") if isinstance(alias_text, bytes) else alias_text
+                            alias_text_str = (
+                                alias_text.decode("utf-8")
+                                if isinstance(alias_text, bytes)
+                                else alias_text
+                            )
                             text = f"{module_name_str} as {alias_text_str}"
                         else:
                             text = f"{module_name} as {alias_text}"
@@ -413,7 +462,10 @@ def process_symbol_matches(
 
 
 def analyze_project_structure(
-    project: Any, language_registry: Any, scan_depth: int = 3, mcp_ctx: Optional[Any] = None
+    project: Any,
+    language_registry: Any,
+    scan_depth: int = 3,
+    mcp_ctx: Optional[Any] = None,
 ) -> Dict[str, Any]:
     """
     Analyze the overall structure of a project.
@@ -510,7 +562,11 @@ def analyze_project_structure(
         from ..api import get_config
 
         config = get_config()
-        dirs[:] = [d for d in dirs if not d.startswith(".") and d not in config.security.excluded_dirs]
+        dirs[:] = [
+            d
+            for d in dirs
+            if not d.startswith(".") and d not in config.security.excluded_dirs
+        ]
 
         # Count directories
         dir_counts[rel_dir] = len(dirs)
@@ -531,7 +587,11 @@ def analyze_project_structure(
     if scan_depth > 0:
         # Analyze a sample of files from each language
         for language, _ in languages.items():
-            extensions = [ext for ext, lang in language_registry._language_map.items() if lang == language]
+            extensions = [
+                ext
+                for ext, lang in language_registry._language_map.items()
+                if lang == language
+            ]
 
             if not extensions:
                 continue
@@ -562,7 +622,8 @@ def analyze_project_structure(
 
                         # Summarize symbols
                         symbol_counts = {
-                            symbol_type: len(symbols_list) for symbol_type, symbols_list in symbols.items()
+                            symbol_type: len(symbols_list)
+                            for symbol_type, symbols_list in symbols.items()
                         }
 
                         language_analysis.append(
@@ -772,7 +833,11 @@ def find_dependencies(
                     continue
 
                 # Extract module name from parent
-                if aliased_node is not None and aliased_node.parent and aliased_node.parent.parent:
+                if (
+                    aliased_node is not None
+                    and aliased_node.parent
+                    and aliased_node.parent.parent
+                ):
                     for child in aliased_node.parent.parent.children:
                         if hasattr(child, "type") and child.type == "dotted_name":
                             module_name_text = get_node_text(child, source_bytes)
@@ -844,7 +909,9 @@ def analyze_code_complexity(
         comment_prefix = get_comment_prefix(language)
         if comment_prefix:
             # Count comments for text lines
-            comment_lines = sum(1 for line in lines if line.strip().startswith(comment_prefix))
+            comment_lines = sum(
+                1 for line in lines if line.strip().startswith(comment_prefix)
+            )
 
         # Get function and class definitions, excluding methods from count
         symbols = extract_symbols(
@@ -904,7 +971,9 @@ def analyze_code_complexity(
         comment_ratio = comment_lines / line_count if line_count > 0 else 0
 
         # Estimate average function length
-        avg_func_lines = float(code_lines / function_count if function_count > 0 else code_lines)
+        avg_func_lines = float(
+            code_lines / function_count if function_count > 0 else code_lines
+        )
 
         return {
             "line_count": line_count,

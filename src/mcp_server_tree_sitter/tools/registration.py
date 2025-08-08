@@ -193,10 +193,14 @@ def register_tools(mcp_server: Any, container: DependencyContainer) -> None:
         """
         from ..tools.file_operations import list_project_files
 
-        return list_project_files(project_registry.get_project(project), pattern, max_depth, extensions)
+        return list_project_files(
+            project_registry.get_project(project), pattern, max_depth, extensions
+        )
 
     @mcp_server.tool()
-    def get_file(project: str, path: str, max_lines: Optional[int] = None, start_line: int = 0) -> str:
+    def get_file(
+        project: str, path: str, max_lines: Optional[int] = None, start_line: int = 0
+    ) -> str:
         """Get content of a file.
 
         Args:
@@ -210,7 +214,12 @@ def register_tools(mcp_server: Any, container: DependencyContainer) -> None:
         """
         from ..tools.file_operations import get_file_content
 
-        return get_file_content(project_registry.get_project(project), path, max_lines=max_lines, start_line=start_line)
+        return get_file_content(
+            project_registry.get_project(project),
+            path,
+            max_lines=max_lines,
+            start_line=start_line,
+        )
 
     @mcp_server.tool()
     def get_file_metadata(project: str, path: str) -> Dict[str, Any]:
@@ -229,7 +238,12 @@ def register_tools(mcp_server: Any, container: DependencyContainer) -> None:
 
     # AST Analysis Tools
     @mcp_server.tool()
-    def get_ast(project: str, path: str, max_depth: Optional[int] = None, include_text: bool = True) -> Dict[str, Any]:
+    def get_ast(
+        project: str,
+        path: str,
+        max_depth: Optional[int] = None,
+        include_text: bool = True,
+    ) -> Dict[str, Any]:
         """Get abstract syntax tree for a file.
 
         Args:
@@ -256,7 +270,9 @@ def register_tools(mcp_server: Any, container: DependencyContainer) -> None:
         )
 
     @mcp_server.tool()
-    def get_node_at_position(project: str, path: str, row: int, column: int) -> Optional[Dict[str, Any]]:
+    def get_node_at_position(
+        project: str, path: str, row: int, column: int
+    ) -> Optional[Dict[str, Any]]:
         """Find the AST node at a specific position.
 
         Args:
@@ -280,7 +296,9 @@ def register_tools(mcp_server: Any, container: DependencyContainer) -> None:
 
         from ..tools.ast_operations import parse_file as parse_file_helper
 
-        tree, source_bytes = parse_file_helper(file_path, language, language_registry, tree_cache)
+        tree, source_bytes = parse_file_helper(
+            file_path, language, language_registry, tree_cache
+        )
 
         node = find_node_at_position(tree.root_node, row, column)
         if node:
@@ -402,7 +420,9 @@ def register_tools(mcp_server: Any, container: DependencyContainer) -> None:
         return list_query_templates(language)
 
     @mcp_server.tool()
-    def build_query(language: str, patterns: List[str], combine: str = "or") -> Dict[str, str]:
+    def build_query(
+        language: str, patterns: List[str], combine: str = "or"
+    ) -> Dict[str, str]:
         """Build a tree-sitter query from templates or patterns.
 
         Args:
@@ -474,10 +494,17 @@ def register_tools(mcp_server: Any, container: DependencyContainer) -> None:
         """
         from ..tools.analysis import extract_symbols
 
-        return extract_symbols(project_registry.get_project(project), file_path, language_registry, symbol_types)
+        return extract_symbols(
+            project_registry.get_project(project),
+            file_path,
+            language_registry,
+            symbol_types,
+        )
 
     @mcp_server.tool()
-    def analyze_project(project: str, scan_depth: int = 3, ctx: Optional[Any] = None) -> Dict[str, Any]:
+    def analyze_project(
+        project: str, scan_depth: int = 3, ctx: Optional[Any] = None
+    ) -> Dict[str, Any]:
         """Analyze overall project structure.
 
         Args:
@@ -490,7 +517,9 @@ def register_tools(mcp_server: Any, container: DependencyContainer) -> None:
         """
         from ..tools.analysis import analyze_project_structure
 
-        return analyze_project_structure(project_registry.get_project(project), language_registry, scan_depth, ctx)
+        return analyze_project_structure(
+            project_registry.get_project(project), language_registry, scan_depth, ctx
+        )
 
     @mcp_server.tool()
     def get_dependencies(project: str, file_path: str) -> Dict[str, List[str]]:
@@ -621,12 +650,19 @@ def register_tools(mcp_server: Any, container: DependencyContainer) -> None:
         from ..tools.search import query_code
 
         return query_code(
-            project_registry.get_project(project), query, language_registry, tree_cache, file_path, language
+            project_registry.get_project(project),
+            query,
+            language_registry,
+            tree_cache,
+            file_path,
+            language,
         )
 
     # Cache Management
     @mcp_server.tool()
-    def clear_cache(project: Optional[str] = None, file_path: Optional[str] = None) -> Dict[str, str]:
+    def clear_cache(
+        project: Optional[str] = None, file_path: Optional[str] = None
+    ) -> Dict[str, str]:
         """Clear the parse tree cache.
 
         Args:
@@ -788,7 +824,9 @@ def _register_prompts(mcp_server: Any, container: DependencyContainer) -> None:
         language = language_registry.language_for_file(file_path)
 
         try:
-            complexity = analyze_code_complexity(project_obj, file_path, language_registry)
+            complexity = analyze_code_complexity(
+                project_obj, file_path, language_registry
+            )
             complexity_info = f"""
             Code metrics:
             - Line count: {complexity["line_count"]}
@@ -831,16 +869,25 @@ def _register_prompts(mcp_server: Any, container: DependencyContainer) -> None:
         try:
             analysis = analyze_project_structure(project_obj, language_registry)
 
-            languages_str = "\n".join(f"- {lang}: {count} files" for lang, count in analysis["languages"].items())
+            languages_str = "\n".join(
+                f"- {lang}: {count} files"
+                for lang, count in analysis["languages"].items()
+            )
 
             entry_points_str = (
-                "\n".join(f"- {entry['path']} ({entry['language']})" for entry in analysis["entry_points"])
+                "\n".join(
+                    f"- {entry['path']} ({entry['language']})"
+                    for entry in analysis["entry_points"]
+                )
                 if analysis["entry_points"]
                 else "None detected"
             )
 
             build_files_str = (
-                "\n".join(f"- {file['path']} ({file['type']})" for file in analysis["build_files"])
+                "\n".join(
+                    f"- {file['path']} ({file['type']})"
+                    for file in analysis["build_files"]
+                )
                 if analysis["build_files"]
                 else "None detected"
             )

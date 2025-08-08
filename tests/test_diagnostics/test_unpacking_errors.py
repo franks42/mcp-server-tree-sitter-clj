@@ -7,7 +7,13 @@ from typing import Any, Dict, Generator
 import pytest
 
 from mcp_server_tree_sitter.api import get_project_registry
-from tests.test_helpers import analyze_complexity, get_dependencies, get_symbols, register_project_tool, run_query
+from tests.test_helpers import (
+    analyze_complexity,
+    get_dependencies,
+    get_symbols,
+    register_project_tool,
+    run_query,
+)
 
 
 @pytest.fixture
@@ -66,7 +72,9 @@ def test_get_symbols_error(test_project, diagnostic) -> None:
 
     try:
         # Try to extract symbols from test file
-        symbols = get_symbols(project=test_project["name"], file_path=test_project["file"])
+        symbols = get_symbols(
+            project=test_project["name"], file_path=test_project["file"]
+        )
 
         # If successful, record the symbols
         diagnostic.add_detail("symbols", symbols)
@@ -74,7 +82,9 @@ def test_get_symbols_error(test_project, diagnostic) -> None:
         # Check the structure of the symbols dictionary
         assert isinstance(symbols, dict), "Symbols should be a dictionary"
         for category, items in symbols.items():
-            assert isinstance(items, list), f"Symbol category {category} should contain a list"
+            assert isinstance(
+                items, list
+            ), f"Symbol category {category} should contain a list"
 
     except Exception as e:
         # Record the error
@@ -101,7 +111,9 @@ def test_get_dependencies_error(test_project, diagnostic) -> None:
 
     try:
         # Try to find dependencies in test file
-        dependencies = get_dependencies(project=test_project["name"], file_path=test_project["file"])
+        dependencies = get_dependencies(
+            project=test_project["name"], file_path=test_project["file"]
+        )
 
         # If successful, record the dependencies
         diagnostic.add_detail("dependencies", dependencies)
@@ -134,14 +146,18 @@ def test_analyze_complexity_error(test_project, diagnostic) -> None:
 
     try:
         # Try to analyze code complexity
-        complexity = analyze_complexity(project=test_project["name"], file_path=test_project["file"])
+        complexity = analyze_complexity(
+            project=test_project["name"], file_path=test_project["file"]
+        )
 
         # If successful, record the complexity metrics
         diagnostic.add_detail("complexity", complexity)
 
         # Check the structure of the complexity dictionary
         assert "line_count" in complexity, "Complexity should include line_count"
-        assert "function_count" in complexity, "Complexity should include function_count"
+        assert (
+            "function_count" in complexity
+        ), "Complexity should include function_count"
 
     except Exception as e:
         # Record the error
@@ -181,7 +197,9 @@ def test_run_query_error(test_project, diagnostic) -> None:
         # Check the structure of the query results
         assert isinstance(query_result, list), "Query result should be a list"
         if query_result:
-            assert "capture" in query_result[0], "Query result items should have 'capture' field"
+            assert (
+                "capture" in query_result[0]
+            ), "Query result items should have 'capture' field"
 
     except Exception as e:
         # Record the error

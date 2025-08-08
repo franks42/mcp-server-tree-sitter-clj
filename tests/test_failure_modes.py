@@ -36,7 +36,9 @@ def mock_project(request) -> Generator[Dict[str, Any], None, None]:
         # Create a simple Python file for testing
         test_file = project_path / "test.py"
         with open(test_file, "w") as f:
-            f.write("import os\n\ndef hello():\n    print('Hello, world!')\n\nhello()\n")
+            f.write(
+                "import os\n\ndef hello():\n    print('Hello, world!')\n\nhello()\n"
+            )
 
         # Generate a unique project name based on the test name
         test_name = request.node.name
@@ -126,7 +128,9 @@ class TestSymbolExtraction:
         # Check for hello function - handling both bytes and strings
         hello_found = False
         for name in function_names:
-            if (isinstance(name, bytes) and b"hello" in name) or (isinstance(name, str) and "hello" in name):
+            if (isinstance(name, bytes) and b"hello" in name) or (
+                isinstance(name, str) and "hello" in name
+            ):
                 hello_found = True
                 break
         assert hello_found, "Should find the 'hello' function"
@@ -184,7 +188,9 @@ class TestCodeSearch:
     def test_find_usage_for_function(self, mock_project) -> None:
         """Test that find_usage finds function references."""
         # Execute find_usage with a symbol that exists in the file
-        result = find_usage(project=mock_project["name"], symbol="hello", language="python")
+        result = find_usage(
+            project=mock_project["name"], symbol="hello", language="python"
+        )
 
         # Verify the function finds the usage
         assert result is not None, "find_usage should execute without exceptions"
@@ -245,7 +251,9 @@ class TestASTHandling:
     def test_ast_node_traversal(self, mock_project) -> None:
         """Test AST node traversal functionality."""
         # Get an AST for a file
-        ast_result = get_ast(project=mock_project["name"], path="test.py", max_depth=5, include_text=True)
+        ast_result = get_ast(
+            project=mock_project["name"], path="test.py", max_depth=5, include_text=True
+        )
 
         # Verify complete AST structure
         assert "tree" in ast_result

@@ -16,10 +16,14 @@ logger = get_logger(__name__)
 def main() -> int:
     """Run the server with optional arguments."""
     # Parse command line arguments
-    parser = argparse.ArgumentParser(description="MCP Tree-sitter Server - Code analysis with tree-sitter")
+    parser = argparse.ArgumentParser(
+        description="MCP Tree-sitter Server - Code analysis with tree-sitter"
+    )
     parser.add_argument("--config", help="Path to configuration file")
     parser.add_argument("--debug", action="store_true", help="Enable debug logging")
-    parser.add_argument("--disable-cache", action="store_true", help="Disable parse tree caching")
+    parser.add_argument(
+        "--disable-cache", action="store_true", help="Disable parse tree caching"
+    )
     parser.add_argument("--version", action="store_true", help="Show version and exit")
 
     args = parser.parse_args()
@@ -52,10 +56,18 @@ def main() -> int:
             global_context.config_manager.load_from_file(args.config)
         else:
             # Update individual settings from config
-            global_context.config_manager.update_value("cache.enabled", config.cache.enabled)
-            global_context.config_manager.update_value("cache.max_size_mb", config.cache.max_size_mb)
-            global_context.config_manager.update_value("security.max_file_size_mb", config.security.max_file_size_mb)
-            global_context.config_manager.update_value("language.default_max_depth", config.language.default_max_depth)
+            global_context.config_manager.update_value(
+                "cache.enabled", config.cache.enabled
+            )
+            global_context.config_manager.update_value(
+                "cache.max_size_mb", config.cache.max_size_mb
+            )
+            global_context.config_manager.update_value(
+                "security.max_file_size_mb", config.security.max_file_size_mb
+            )
+            global_context.config_manager.update_value(
+                "language.default_max_depth", config.language.default_max_depth
+            )
 
         logger.debug("Configuration loaded successfully")
     except Exception as e:

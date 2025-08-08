@@ -69,7 +69,9 @@ def test_server_context_initialization(mock_dependencies):
 
 
 @patch("mcp_server_tree_sitter.di.get_container")
-def test_server_context_initialization_with_container(mock_get_container, mock_dependencies):
+def test_server_context_initialization_with_container(
+    mock_get_container, mock_dependencies
+):
     """Test that ServerContext falls back to container when dependencies are not provided."""
     container = MagicMock()
     container.config_manager = mock_dependencies["config_manager"]
@@ -119,7 +121,9 @@ def test_register_project(server_context, mock_dependencies):
     )
 
     # Verify
-    project_registry.register_project.assert_called_once_with("test_project", "/path/to/project", "Test description")
+    project_registry.register_project.assert_called_once_with(
+        "test_project", "/path/to/project", "Test description"
+    )
     mock_project.scan_files.assert_called_once_with(language_registry)
     assert result == {"name": "test_project", "path": "/path"}
 
@@ -141,7 +145,10 @@ def test_list_projects(server_context, mock_dependencies):
     """Test that list_projects calls the project registry."""
     # Setup
     project_registry = mock_dependencies["project_registry"]
-    project_registry.list_projects.return_value = [{"name": "project1"}, {"name": "project2"}]
+    project_registry.list_projects.return_value = [
+        {"name": "project1"},
+        {"name": "project2"},
+    ]
 
     # Call the method
     result = server_context.list_projects()
@@ -193,7 +200,10 @@ def test_clear_cache_for_file(server_context, mock_dependencies):
     project_registry.get_project.assert_called_once_with("test_project")
     mock_project.get_file_path.assert_called_once_with("file.py")
     tree_cache.invalidate.assert_called_once_with("/abs/path/to/file.py")
-    assert result == {"status": "success", "message": "Cache cleared for file.py in test_project"}
+    assert result == {
+        "status": "success",
+        "message": "Cache cleared for file.py in test_project",
+    }
 
 
 @patch("logging.getLogger")
@@ -250,7 +260,8 @@ def test_configure_log_level(mock_get_logger, server_context, mock_dependencies)
 
     # Call the method
     with patch(
-        "logging.root.manager.loggerDict", {"mcp_server_tree_sitter": None, "mcp_server_tree_sitter.test": None}
+        "logging.root.manager.loggerDict",
+        {"mcp_server_tree_sitter": None, "mcp_server_tree_sitter.test": None},
     ):
         # Call the method and discard result
         server_context.configure(log_level="DEBUG")

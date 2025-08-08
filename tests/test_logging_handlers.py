@@ -71,8 +71,12 @@ def test_handler_level_synchronization():
 
     try:
         # Initial state verification
-        assert test_logger.level == logging.NOTSET, "Test logger should not have explicit level"
-        assert test_logger.getEffectiveLevel() == root_logger.level, "Effective level should be inherited from root"
+        assert (
+            test_logger.level == logging.NOTSET
+        ), "Test logger should not have explicit level"
+        assert (
+            test_logger.getEffectiveLevel() == root_logger.level
+        ), "Effective level should be inherited from root"
 
         # Initial handler levels
         assert test_logger.handlers[0].level == logging.DEBUG
@@ -83,10 +87,14 @@ def test_handler_level_synchronization():
         update_log_levels("DEBUG")
 
         # Child logger level should NOT be explicitly changed
-        assert test_logger.level == logging.NOTSET, "Child logger level should NOT be explicitly set"
+        assert (
+            test_logger.level == logging.NOTSET
+        ), "Child logger level should NOT be explicitly set"
 
         # Effective level should now be DEBUG through inheritance
-        assert test_logger.getEffectiveLevel() == logging.DEBUG, "Effective level should be DEBUG through inheritance"
+        assert (
+            test_logger.getEffectiveLevel() == logging.DEBUG
+        ), "Effective level should be DEBUG through inheritance"
 
         # All handlers should now be at DEBUG level (synchronized to effective level)
         assert test_logger.handlers[0].level == logging.DEBUG
@@ -97,12 +105,14 @@ def test_handler_level_synchronization():
         update_log_levels("WARNING")
 
         # Child logger level should still not be explicitly changed
-        assert test_logger.level == logging.NOTSET, "Child logger level should NOT be explicitly set"
+        assert (
+            test_logger.level == logging.NOTSET
+        ), "Child logger level should NOT be explicitly set"
 
         # Effective level should now be WARNING through inheritance
-        assert test_logger.getEffectiveLevel() == logging.WARNING, (
-            "Effective level should be WARNING through inheritance"
-        )
+        assert (
+            test_logger.getEffectiveLevel() == logging.WARNING
+        ), "Effective level should be WARNING through inheritance"
 
         # All handlers should now be at WARNING level (synchronized to effective level)
         assert test_logger.handlers[0].level == logging.WARNING
@@ -137,10 +147,14 @@ def test_get_logger_handler_sync():
         test_logger = get_logger(logger_name)
 
         # Child logger should NOT have an explicit level set
-        assert test_logger.level == logging.NOTSET, "Child logger should not have explicit level set"
+        assert (
+            test_logger.level == logging.NOTSET
+        ), "Child logger should not have explicit level set"
 
         # Child logger should inherit level from root package logger
-        assert test_logger.getEffectiveLevel() == root_logger.level, "Child logger should inherit level from root"
+        assert (
+            test_logger.getEffectiveLevel() == root_logger.level
+        ), "Child logger should inherit level from root"
 
         # Add a handler and manually set its level to match the logger's effective level
         handler = logging.StreamHandler()
@@ -149,33 +163,45 @@ def test_get_logger_handler_sync():
         handler.setLevel(test_logger.getEffectiveLevel())
 
         # Now verify that handler matches logger's effective level
-        assert handler.level == test_logger.getEffectiveLevel(), "Handler should match logger's effective level"
+        assert (
+            handler.level == test_logger.getEffectiveLevel()
+        ), "Handler should match logger's effective level"
 
         # Update log levels to DEBUG
         update_log_levels("DEBUG")
 
         # Child logger should still NOT have explicit level
-        assert test_logger.level == logging.NOTSET, "Child logger should not have explicit level set after update"
+        assert (
+            test_logger.level == logging.NOTSET
+        ), "Child logger should not have explicit level set after update"
 
         # Child logger should inherit DEBUG from root
-        assert test_logger.getEffectiveLevel() == logging.DEBUG, "Child logger should inherit DEBUG from root"
+        assert (
+            test_logger.getEffectiveLevel() == logging.DEBUG
+        ), "Child logger should inherit DEBUG from root"
 
         # Handler should be updated to match effective level
-        assert handler.level == logging.DEBUG, "Handler should match logger's effective level (DEBUG)"
+        assert (
+            handler.level == logging.DEBUG
+        ), "Handler should match logger's effective level (DEBUG)"
 
         # Update log levels to WARNING
         update_log_levels("WARNING")
 
         # Child logger should still NOT have explicit level
-        assert test_logger.level == logging.NOTSET, (
-            "Child logger should not have explicit level set after second update"
-        )
+        assert (
+            test_logger.level == logging.NOTSET
+        ), "Child logger should not have explicit level set after second update"
 
         # Child logger should inherit WARNING from root
-        assert test_logger.getEffectiveLevel() == logging.WARNING, "Child logger should inherit WARNING from root"
+        assert (
+            test_logger.getEffectiveLevel() == logging.WARNING
+        ), "Child logger should inherit WARNING from root"
 
         # Handler should be updated to match effective level
-        assert handler.level == logging.WARNING, "Handler should match logger's effective level (WARNING)"
+        assert (
+            handler.level == logging.WARNING
+        ), "Handler should match logger's effective level (WARNING)"
 
         # Test root logger behavior
         root_test_logger = get_logger("mcp_server_tree_sitter")
@@ -186,10 +212,14 @@ def test_get_logger_handler_sync():
         root_handler.setLevel(root_test_logger.level)
 
         # Root logger should have explicit level
-        assert root_test_logger.level != logging.NOTSET, "Root logger should have explicit level set"
+        assert (
+            root_test_logger.level != logging.NOTSET
+        ), "Root logger should have explicit level set"
 
         # Handler should match root logger's level
-        assert root_handler.level == root_test_logger.level, "Root logger handler should match logger level"
+        assert (
+            root_handler.level == root_test_logger.level
+        ), "Root logger handler should match logger level"
     finally:
         # Restore original state
         existing_logger.handlers = original_handlers

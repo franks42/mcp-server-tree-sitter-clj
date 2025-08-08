@@ -66,7 +66,9 @@ def get_file_ast(
     }
 
 
-def parse_file(file_path: Any, language: str, language_registry: Any, tree_cache: Any) -> tuple[Any, bytes]:
+def parse_file(
+    file_path: Any, language: str, language_registry: Any, tree_cache: Any
+) -> tuple[Any, bytes]:
     """
     Parse a file using tree-sitter.
 

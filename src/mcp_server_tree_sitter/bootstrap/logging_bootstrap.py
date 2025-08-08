@@ -41,7 +41,9 @@ def configure_root_logger() -> None:
     log_level = get_log_level_from_env()
 
     # Configure the root logger with proper format and level
-    logging.basicConfig(level=log_level, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    logging.basicConfig(
+        level=log_level, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
 
     # Ensure the root logger for our package is also set correctly
     pkg_logger = logging.getLogger("mcp_server_tree_sitter")
@@ -98,7 +100,9 @@ def update_log_levels(level_name: Union[str, int]) -> None:
     # Synchronize handler levels with their logger's effective level
     # for all existing loggers in our package hierarchy
     for name in logging.root.manager.loggerDict:
-        if name == "mcp_server_tree_sitter" or name.startswith("mcp_server_tree_sitter."):
+        if name == "mcp_server_tree_sitter" or name.startswith(
+            "mcp_server_tree_sitter."
+        ):
             logger = logging.getLogger(name)
 
             # DO NOT set the logger's level explicitly to maintain hierarchy

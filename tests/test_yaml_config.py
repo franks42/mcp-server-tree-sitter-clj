@@ -17,10 +17,15 @@ from tests.test_helpers import configure
 @pytest.fixture
 def temp_yaml_file():
     """Create a temporary YAML file with test configuration."""
-    with tempfile.NamedTemporaryFile(suffix=".yaml", mode="w+", delete=False) as temp_file:
+    with tempfile.NamedTemporaryFile(
+        suffix=".yaml", mode="w+", delete=False
+    ) as temp_file:
         test_config = {
             "cache": {"enabled": True, "max_size_mb": 256, "ttl_seconds": 3600},
-            "security": {"max_file_size_mb": 10, "excluded_dirs": [".git", "node_modules", "__pycache__", ".cache"]},
+            "security": {
+                "max_file_size_mb": 10,
+                "excluded_dirs": [".git", "node_modules", "__pycache__", ".cache"],
+            },
             "language": {"auto_install": True, "default_max_depth": 7},
         }
         yaml.dump(test_config, temp_file)
@@ -83,8 +88,12 @@ def test_load_config_function_di(temp_yaml_file):
     finally:
         # Restore original values
         container.config_manager.update_value("cache.max_size_mb", original_cache_size)
-        container.config_manager.update_value("security.max_file_size_mb", original_security_size)
-        container.config_manager.update_value("language.default_max_depth", original_depth)
+        container.config_manager.update_value(
+            "security.max_file_size_mb", original_security_size
+        )
+        container.config_manager.update_value(
+            "language.default_max_depth", original_depth
+        )
 
 
 def test_configure_helper(temp_yaml_file):
@@ -132,15 +141,22 @@ def test_configure_helper(temp_yaml_file):
     finally:
         # Restore original values
         container.config_manager.update_value("cache.max_size_mb", original_cache_size)
-        container.config_manager.update_value("security.max_file_size_mb", original_security_size)
-        container.config_manager.update_value("language.default_max_depth", original_depth)
+        container.config_manager.update_value(
+            "security.max_file_size_mb", original_security_size
+        )
+        container.config_manager.update_value(
+            "language.default_max_depth", original_depth
+        )
 
 
 def test_real_yaml_example():
     """Test with a real-world example like the one in the issue."""
-    with tempfile.NamedTemporaryFile(suffix=".yaml", mode="w+", delete=False) as temp_file:
+    with tempfile.NamedTemporaryFile(
+        suffix=".yaml", mode="w+", delete=False
+    ) as temp_file:
         # Copy the example from the issue
-        temp_file.write("""cache:
+        temp_file.write(
+            """cache:
   enabled: true
   max_size_mb: 256
   ttl_seconds: 3600
@@ -187,7 +203,8 @@ security:
 language:
   auto_install: true
   default_max_depth: 7
-""")
+"""
+        )
         temp_file.flush()
         temp_file_path = temp_file.name
 
@@ -223,9 +240,15 @@ language:
 
         finally:
             # Restore original values
-            container.config_manager.update_value("cache.max_size_mb", original_cache_size)
-            container.config_manager.update_value("security.max_file_size_mb", original_security_size)
-            container.config_manager.update_value("language.default_max_depth", original_depth)
+            container.config_manager.update_value(
+                "cache.max_size_mb", original_cache_size
+            )
+            container.config_manager.update_value(
+                "security.max_file_size_mb", original_security_size
+            )
+            container.config_manager.update_value(
+                "language.default_max_depth", original_depth
+            )
 
     finally:
         # Clean up the temporary file

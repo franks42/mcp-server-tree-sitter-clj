@@ -123,7 +123,9 @@ class ProjectRegistry:
         if not hasattr(self, "_projects"):
             self._projects: Dict[str, Project] = {}
 
-    def register_project(self, name: str, path: str, description: Optional[str] = None) -> Project:
+    def register_project(
+        self, name: str, path: str, description: Optional[str] = None
+    ) -> Project:
         """
         Register a new project.
 

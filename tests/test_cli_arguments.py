@@ -86,5 +86,7 @@ def test_entry_point_implementation():
     assert "parse_args" in source
 
     # Check for proper handling of key flags
-    assert "--help" in source or "automatically" in source  # argparse adds --help automatically
+    assert (
+        "--help" in source or "automatically" in source
+    )  # argparse adds --help automatically
     assert "--version" in source

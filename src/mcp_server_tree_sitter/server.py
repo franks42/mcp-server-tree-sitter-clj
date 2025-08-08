@@ -106,10 +106,14 @@ def main() -> None:
     import sys
 
     # Parse command line arguments
-    parser = argparse.ArgumentParser(description="MCP Tree-sitter Server - Code analysis with tree-sitter")
+    parser = argparse.ArgumentParser(
+        description="MCP Tree-sitter Server - Code analysis with tree-sitter"
+    )
     parser.add_argument("--config", help="Path to configuration file")
     parser.add_argument("--debug", action="store_true", help="Enable debug logging")
-    parser.add_argument("--disable-cache", action="store_true", help="Disable parse tree caching")
+    parser.add_argument(
+        "--disable-cache", action="store_true", help="Disable parse tree caching"
+    )
     parser.add_argument("--version", action="store_true", help="Show version and exit")
 
     # Parse arguments - this handles --help automatically

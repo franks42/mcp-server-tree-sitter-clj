@@ -6,7 +6,11 @@ from pathlib import Path
 
 import pytest
 
-from mcp_server_tree_sitter.api import get_language_registry, get_project_registry, get_tree_cache
+from mcp_server_tree_sitter.api import (
+    get_language_registry,
+    get_project_registry,
+    get_tree_cache,
+)
 from tests.test_helpers import get_ast, register_project_tool, temp_config
 
 
@@ -185,7 +189,9 @@ def test_cache_eviction_policy(test_project):
             elif cached_file0 is None and cached_file4 is None:
                 assert True, "Both files evicted, can't verify eviction policy"
             else:  # cached_file0 is not None and cached_file4 is None
-                pytest.fail("Unexpected cache state: older entry present but newer missing")
+                pytest.fail(
+                    "Unexpected cache state: older entry present but newer missing"
+                )
 
         finally:
             # Restore original method

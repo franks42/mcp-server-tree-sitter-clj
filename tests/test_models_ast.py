@@ -24,7 +24,8 @@ def test_files() -> Generator[Dict[str, Path], None, None]:
         # Python file
         python_file = dir_path / "test.py"
         with open(python_file, "w") as f:
-            f.write("""
+            f.write(
+                """
 def hello(name):
     return f"Hello, {name}!"
 
@@ -39,12 +40,14 @@ class Person:
 if __name__ == "__main__":
     person = Person("Alice", 30)
     print(person.greet())
-""")
+"""
+            )
 
         # JavaScript file
         js_file = dir_path / "test.js"
         with open(js_file, "w") as f:
-            f.write("""
+            f.write(
+                """
 function hello(name) {
     return `Hello, ${name}!`;
 }
@@ -62,7 +65,8 @@ class Person {
 
 const person = new Person("Alice", 30);
 console.log(person.greet());
-""")
+"""
+            )
 
         yield {
             "python": python_file,
@@ -140,7 +144,9 @@ def test_node_to_dict_with_text(parsed_trees):
 
     # Convert root node to dict with text
     py_source = parsed_trees["python"]["source"]
-    root_dict = node_to_dict(py_tree.root_node, py_source, include_text=True, max_depth=2)
+    root_dict = node_to_dict(
+        py_tree.root_node, py_source, include_text=True, max_depth=2
+    )
 
     # Verify text is included
     assert "text" in root_dict
@@ -159,7 +165,9 @@ def test_node_to_dict_without_text(parsed_trees):
     py_source = parsed_trees["python"]["source"]
 
     # Convert root node to dict without text
-    root_dict = node_to_dict(py_tree.root_node, py_source, include_text=False, max_depth=2)
+    root_dict = node_to_dict(
+        py_tree.root_node, py_source, include_text=False, max_depth=2
+    )
 
     # Verify text is not included
     assert "text" not in root_dict
@@ -302,7 +310,9 @@ def test_extract_node_path(parsed_trees):
     py_tree = parsed_trees["python"]["tree"]
 
     # Find a function name node
-    function_node = find_node_at_position(py_tree.root_node, 1, 5)  # 'hello' function name
+    function_node = find_node_at_position(
+        py_tree.root_node, 1, 5
+    )  # 'hello' function name
     assert function_node is not None
 
     # Extract path from root to function name

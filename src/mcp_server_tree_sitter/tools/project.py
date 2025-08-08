@@ -6,7 +6,9 @@ from ..api import get_language_registry, get_project_registry
 from ..exceptions import ProjectError
 
 
-def register_project(path: str, name: Optional[str] = None, description: Optional[str] = None) -> Dict[str, Any]:
+def register_project(
+    path: str, name: Optional[str] = None, description: Optional[str] = None
+) -> Dict[str, Any]:
     """
     Register a project for code analysis.
 

@@ -178,7 +178,9 @@ def test_excluded_dirs_setting(test_project):
             get_ast(project=test_project["name"], path=".secret/secret.py")
 
         # Verify the error message mentions the excluded directory
-        assert "excluded directory" in str(excinfo.value) or "Access denied" in str(excinfo.value)
+        assert "excluded directory" in str(excinfo.value) or "Access denied" in str(
+            excinfo.value
+        )
 
     # Without the exclusion, it should work
     with temp_config(**{"security.excluded_dirs": []}):
@@ -193,7 +195,8 @@ def test_default_max_depth_setting(test_project):
     # Create a file with nested structure
     nested_file = Path(test_project["path"]) / "nested.py"
     with open(nested_file, "w") as f:
-        f.write("""
+        f.write(
+            """
 class OuterClass:
     def outer_method(self):
         if True:
@@ -203,7 +206,8 @@ class OuterClass:
                         return "Deep nesting"
                     return inner_function()
         return None
-""")
+"""
+        )
 
     # Test with a small depth value
     with temp_config(**{"language.default_max_depth": 2}):
@@ -233,7 +237,9 @@ class OuterClass:
 
         # Maximum depth should be limited
         max_depth = find_max_depth(result["tree"])
-        assert max_depth <= 3, f"AST depth should be limited to ~3 levels, got {max_depth}"
+        assert (
+            max_depth <= 3
+        ), f"AST depth should be limited to ~3 levels, got {max_depth}"
 
     # Test with a larger depth value
     with temp_config(**{"language.default_max_depth": 10}):
@@ -241,4 +247,6 @@ class OuterClass:
 
         # Find max depth again
         max_depth = find_max_depth(result["tree"])
-        assert max_depth > 3, f"AST depth should be greater with larger max_depth, got {max_depth}"
+        assert (
+            max_depth > 3
+        ), f"AST depth should be greater with larger max_depth, got {max_depth}"

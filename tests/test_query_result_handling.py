@@ -118,7 +118,9 @@ def test_query_capture_processing(test_project) -> None:
         ),  # print, greet, process_data
     ],
 )
-def test_query_result_capture_types(test_project, query_string, expected_capture_count) -> None:
+def test_query_result_capture_types(
+    test_project, query_string, expected_capture_count
+) -> None:
     """Test different types of query captures to verify result handling."""
     # Run the query
     result = run_query(
@@ -147,7 +149,9 @@ def test_query_result_capture_types(test_project, query_string, expected_capture
 
             if part in query_string:
                 capture_count += 1
-    assert capture_count >= expected_capture_count, f"Query should return at least {expected_capture_count} captures"
+    assert (
+        capture_count >= expected_capture_count
+    ), f"Query should return at least {expected_capture_count} captures"
 
 
 def test_direct_query_with_language_pack() -> None:
@@ -211,11 +215,24 @@ def test_direct_query_with_language_pack() -> None:
                         node, capture_name = capture[0], capture[1]
                 elif hasattr(capture, "node") and hasattr(capture, "capture_name"):
                     node, capture_name = capture.node, capture.capture_name
-                elif isinstance(capture, dict) and "node" in capture and "capture" in capture:
+                elif (
+                    isinstance(capture, dict)
+                    and "node" in capture
+                    and "capture" in capture
+                ):
                     node, capture_name = capture["node"], capture["capture"]
 
-                if node is not None and capture_name == "name" and hasattr(node, "text") and node.text is not None:
-                    text = node.text.decode("utf-8") if hasattr(node.text, "decode") else str(node.text)
+                if (
+                    node is not None
+                    and capture_name == "name"
+                    and hasattr(node, "text")
+                    and node.text is not None
+                ):
+                    text = (
+                        node.text.decode("utf-8")
+                        if hasattr(node.text, "decode")
+                        else str(node.text)
+                    )
                     if text == "hello":
                         hello_found = True
                         break
@@ -223,8 +240,16 @@ def test_direct_query_with_language_pack() -> None:
             # Dictionary mapping capture names to nodes
             if "name" in captures:
                 for node in captures["name"]:
-                    if node is not None and hasattr(node, "text") and node.text is not None:
-                        text = node.text.decode("utf-8") if hasattr(node.text, "decode") else str(node.text)
+                    if (
+                        node is not None
+                        and hasattr(node, "text")
+                        and node.text is not None
+                    ):
+                        text = (
+                            node.text.decode("utf-8")
+                            if hasattr(node.text, "decode")
+                            else str(node.text)
+                        )
                         if text == "hello":
                             hello_found = True
                             break
@@ -288,4 +313,6 @@ def test_query_result_structure_transformation() -> None:
     assert len(mcp_results) == 2, "Should have 2 transformed results"
     assert mcp_results[0]["capture"] == "name", "First capture should be 'name'"
     assert mcp_results[0]["text"] == "hello", "First capture should have text 'hello'"
-    assert mcp_results[1]["capture"] == "function", "Second capture should be 'function'"
+    assert (
+        mcp_results[1]["capture"] == "function"
+    ), "Second capture should be 'function'"

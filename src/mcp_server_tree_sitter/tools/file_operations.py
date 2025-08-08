@@ -38,7 +38,10 @@ def list_project_files(
         for path in root.iterdir():
             if path.is_file():
                 # Skip files that don't match extension filter
-                if filter_extensions and path.suffix.lower()[1:] not in filter_extensions:
+                if (
+                    filter_extensions
+                    and path.suffix.lower()[1:] not in filter_extensions
+                ):
                     continue
 
                 # Get path relative to project root

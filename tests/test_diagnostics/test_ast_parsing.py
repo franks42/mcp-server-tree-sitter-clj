@@ -6,7 +6,11 @@ from typing import Any, Dict, Generator, Tuple
 
 import pytest
 
-from mcp_server_tree_sitter.api import get_language_registry, get_project_registry, get_tree_cache
+from mcp_server_tree_sitter.api import (
+    get_language_registry,
+    get_project_registry,
+    get_tree_cache,
+)
 from mcp_server_tree_sitter.models.ast import node_to_dict
 from tests.test_helpers import get_ast, register_project_tool
 
@@ -87,7 +91,9 @@ def test_get_ast_functionality(test_project, diagnostic) -> None:
 
         # Check that the tree doesn't contain an error
         if isinstance(ast_result["tree"], dict) and "error" in ast_result["tree"]:
-            raise AssertionError(f"AST tree contains an error: {ast_result['tree']['error']}")
+            raise AssertionError(
+                f"AST tree contains an error: {ast_result['tree']['error']}"
+            )
 
     except Exception as e:
         # Record the error in diagnostics
@@ -131,7 +137,11 @@ def test_direct_parsing(test_project, diagnostic) -> None:
         # Try direct parsing if language is loaded
         if language_obj:
             try:
-                tree, source_bytes = parse_file(file_path, language) if language is not None else (None, None)
+                tree, source_bytes = (
+                    parse_file(file_path, language)
+                    if language is not None
+                    else (None, None)
+                )
 
                 parsing_info = {
                     "status": "success",
@@ -147,7 +157,9 @@ def test_direct_parsing(test_project, diagnostic) -> None:
                         "type": root.type,
                         "start_byte": root.start_byte,
                         "end_byte": root.end_byte,
-                        "child_count": (len(root.children) if hasattr(root, "children") else -1),
+                        "child_count": (
+                            len(root.children) if hasattr(root, "children") else -1
+                        ),
                     }
                     diagnostic.add_detail("root_node", root_info)
 
@@ -164,20 +176,24 @@ def test_direct_parsing(test_project, diagnostic) -> None:
 
                         # Assert dictionary structure
                         assert "type" in node_dict, "node_dict should contain type"
-                        assert "children" in node_dict or "truncated" in node_dict, (
-                            "node_dict should contain children or be truncated"
-                        )
+                        assert (
+                            "children" in node_dict or "truncated" in node_dict
+                        ), "node_dict should contain children or be truncated"
 
                         # Check for error in node dictionary
                         if "error" in node_dict:
-                            raise AssertionError(f"node_dict contains an error: {node_dict['error']}")
+                            raise AssertionError(
+                                f"node_dict contains an error: {node_dict['error']}"
+                            )
 
                     except Exception as e:
                         diagnostic.add_error("NodeToDictError", str(e))
                         pytest.fail(f"node_to_dict failed: {e}")
 
                 else:
-                    diagnostic.add_error("NoRootNodeError", "Tree has no root_node attribute")
+                    diagnostic.add_error(
+                        "NoRootNodeError", "Tree has no root_node attribute"
+                    )
                     pytest.fail("Tree has no root_node attribute")
 
             except Exception as e:

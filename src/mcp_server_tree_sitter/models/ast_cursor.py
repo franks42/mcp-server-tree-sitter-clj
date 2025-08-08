@@ -84,7 +84,9 @@ def node_to_dict_cursor(
     current_depth = 0
 
     # Process a node and add it to node_map
-    def process_node(current_node: Node, parent_data: Dict[str, Any], depth: int) -> Dict[str, Any]:
+    def process_node(
+        current_node: Node, parent_data: Dict[str, Any], depth: int
+    ) -> Dict[str, Any]:
         node_id = get_node_id(current_node)
 
         # Return existing node data if already processed
@@ -148,7 +150,9 @@ def node_to_dict_cursor(
                 parent_stack.append(current_data)
                 # Ensure node is not None before processing
                 if cursor.node is not None:
-                    current_data = process_node(cursor.node, current_data, current_depth)
+                    current_data = process_node(
+                        cursor.node, current_data, current_depth
+                    )
                 else:
                     visited_children = True
                 continue
@@ -160,7 +164,9 @@ def node_to_dict_cursor(
         elif cursor.goto_next_sibling():
             # Ensure node is not None before processing
             if cursor.node is not None:
-                current_data = process_node(cursor.node, parent_stack[-1], current_depth)
+                current_data = process_node(
+                    cursor.node, parent_stack[-1], current_depth
+                )
             else:
                 visited_children = True
             visited_children = False

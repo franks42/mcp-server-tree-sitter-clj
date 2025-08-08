@@ -18,20 +18,26 @@ def test_early_init_in_package():
     init_source = inspect.getsource(mcp_server_tree_sitter)
 
     # Verify bootstrap import is present and comes before other imports
-    assert "from . import bootstrap" in init_source, "bootstrap should be imported in __init__.py"
+    assert (
+        "from . import bootstrap" in init_source
+    ), "bootstrap should be imported in __init__.py"
 
     # Check the bootstrap/__init__.py to ensure it imports logging_bootstrap
     import mcp_server_tree_sitter.bootstrap
 
     bootstrap_init_source = inspect.getsource(mcp_server_tree_sitter.bootstrap)
 
-    assert "from . import logging_bootstrap" in bootstrap_init_source, "bootstrap init should import logging_bootstrap"
+    assert (
+        "from . import logging_bootstrap" in bootstrap_init_source
+    ), "bootstrap init should import logging_bootstrap"
 
     # Check that bootstrap's __all__ includes logging functions
-    assert "get_logger" in mcp_server_tree_sitter.bootstrap.__all__, "get_logger should be exported by bootstrap"
-    assert "update_log_levels" in mcp_server_tree_sitter.bootstrap.__all__, (
-        "update_log_levels should be exported by bootstrap"
-    )
+    assert (
+        "get_logger" in mcp_server_tree_sitter.bootstrap.__all__
+    ), "get_logger should be exported by bootstrap"
+    assert (
+        "update_log_levels" in mcp_server_tree_sitter.bootstrap.__all__
+    ), "update_log_levels should be exported by bootstrap"
 
 
 def test_configure_is_called_at_import():
@@ -56,10 +62,14 @@ def test_environment_vars_processed_early():
     try:
         # Test with DEBUG level
         os.environ["MCP_TS_LOG_LEVEL"] = "DEBUG"
-        from mcp_server_tree_sitter.bootstrap.logging_bootstrap import get_log_level_from_env
+        from mcp_server_tree_sitter.bootstrap.logging_bootstrap import (
+            get_log_level_from_env,
+        )
 
         # Verify function returns correct level
-        assert get_log_level_from_env() == logging.DEBUG, "Should return DEBUG level from environment"
+        assert (
+            get_log_level_from_env() == logging.DEBUG
+        ), "Should return DEBUG level from environment"
 
         # Test with INFO level - this time specify module differently to avoid NameError
         os.environ["MCP_TS_LOG_LEVEL"] = "INFO"
@@ -72,7 +82,9 @@ def test_environment_vars_processed_early():
         importlib.reload(bootstrap_logging)
 
         # Verify the function returns the new level
-        assert bootstrap_logging.get_log_level_from_env() == logging.INFO, "Should return INFO level from environment"
+        assert (
+            bootstrap_logging.get_log_level_from_env() == logging.INFO
+        ), "Should return INFO level from environment"
 
     finally:
         # Restore environment
@@ -96,7 +108,9 @@ def test_handlers_synchronized_at_init():
         # Set environment variable
         with patch.dict(os.environ, {"MCP_TS_LOG_LEVEL": "DEBUG"}):
             # Mock the get_log_level_from_env function to control return value
-            with patch("mcp_server_tree_sitter.bootstrap.logging_bootstrap.get_log_level_from_env") as mock_get_level:
+            with patch(
+                "mcp_server_tree_sitter.bootstrap.logging_bootstrap.get_log_level_from_env"
+            ) as mock_get_level:
                 mock_get_level.return_value = logging.DEBUG
 
                 # Force reload to trigger initialization

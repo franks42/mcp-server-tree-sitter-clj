@@ -22,9 +22,13 @@ logger = logging.getLogger(__name__)
 class TreeCache:
     """Cache for parsed syntax trees."""
 
-    def __init__(self, max_size_mb: Optional[int] = None, ttl_seconds: Optional[int] = None):
+    def __init__(
+        self, max_size_mb: Optional[int] = None, ttl_seconds: Optional[int] = None
+    ):
         """Initialize the tree cache with explicit size and TTL settings."""
-        self.cache: Dict[str, Tuple[Any, bytes, float]] = {}  # (tree, source, timestamp)
+        self.cache: Dict[str, Tuple[Any, bytes, float]] = (
+            {}
+        )  # (tree, source, timestamp)
         self.lock = threading.RLock()
         self.current_size_bytes = 0
         self.modified_trees: Dict[str, bool] = {}
@@ -55,7 +59,9 @@ class TreeCache:
             from ..di import get_container
 
             config = get_container().get_config()
-            return config.cache.max_size_mb if self.enabled else 0  # Return 0 if disabled
+            return (
+                config.cache.max_size_mb if self.enabled else 0
+            )  # Return 0 if disabled
         except (ImportError, AttributeError):
             # Fallback to instance value if container unavailable
             return self.max_size_mb
@@ -119,7 +125,9 @@ class TreeCache:
                 current_time = time.time()
                 entry_age = current_time - timestamp
                 if entry_age > ttl_seconds:
-                    logger.debug(f"Cache entry expired: age={entry_age:.2f}s, ttl={ttl_seconds}s")
+                    logger.debug(
+                        f"Cache entry expired: age={entry_age:.2f}s, ttl={ttl_seconds}s"
+                    )
                     del self.cache[cache_key]
                     # Approximate size reduction
                     self.current_size_bytes -= len(source)
@@ -166,7 +174,9 @@ class TreeCache:
             return
 
         if source_size > max_size_bytes:
-            logger.warning(f"File too large to cache: {file_path} ({source_size / (1024 * 1024):.2f}MB)")
+            logger.warning(
+                f"File too large to cache: {file_path} ({source_size / (1024 * 1024):.2f}MB)"
+            )
             return
 
         with self.lock:
@@ -224,7 +234,9 @@ class TreeCache:
         except (FileNotFoundError, OSError):
             return False
 
-    def update_tree(self, file_path: Path, language: str, tree: Tree, source: bytes) -> None:
+    def update_tree(
+        self, file_path: Path, language: str, tree: Tree, source: bytes
+    ) -> None:
         """
         Update a cached tree after modification.
 
@@ -290,7 +302,9 @@ class TreeCache:
             # For tests with very small caches, we need to be more aggressive
             target_to_free = self.current_size_bytes // 2  # Remove half the cache
             min_entries_to_remove = max(1, len(self.cache) // 2)
-            logger.debug(f"Small cache detected ({max_size_mb}MB), removing {min_entries_to_remove} entries")
+            logger.debug(
+                f"Small cache detected ({max_size_mb}MB), removing {min_entries_to_remove} entries"
+            )
 
         # If cache is already too full, free more space to prevent continuous evictions
         elif self.current_size_bytes > max_size_bytes * 0.9:
@@ -309,7 +323,10 @@ class TreeCache:
             entries_removed += 1
 
             # Stop once we've freed enough space AND removed minimum entries
-            if bytes_freed >= target_to_free and entries_removed >= min_entries_to_remove:
+            if (
+                bytes_freed >= target_to_free
+                and entries_removed >= min_entries_to_remove
+            ):
                 break
 
         # Log the eviction with appropriate level

@@ -70,7 +70,9 @@ def test_get_log_level_from_env():
     # Test with invalid level (should default to INFO)
     with patch.dict(os.environ, {"MCP_TS_LOG_LEVEL": "INVALID_LEVEL"}):
         level = get_log_level_from_env()
-        assert level == logging.INFO, "Should return default INFO level for invalid inputs"
+        assert (
+            level == logging.INFO
+        ), "Should return default INFO level for invalid inputs"
 
     # Test with lowercase level name (should be case-insensitive)
     with patch.dict(os.environ, {"MCP_TS_LOG_LEVEL": "debug"}):
@@ -104,35 +106,45 @@ def test_update_log_levels():
 
         # Check root logger is updated
         assert root_logger.level == logging.DEBUG, "Root logger level should be updated"
-        assert root_handler.level == logging.DEBUG, "Root logger handler level should be updated"
+        assert (
+            root_handler.level == logging.DEBUG
+        ), "Root logger handler level should be updated"
 
         # Child logger level should NOT be explicitly set (only handlers synchronized)
         # But effective level should be DEBUG through inheritance
-        assert child_logger.level != logging.DEBUG, "Child logger level should NOT be explicitly set"
-        assert child_logger.getEffectiveLevel() == logging.DEBUG, (
-            "Child logger effective level should be DEBUG through inheritance"
-        )
+        assert (
+            child_logger.level != logging.DEBUG
+        ), "Child logger level should NOT be explicitly set"
+        assert (
+            child_logger.getEffectiveLevel() == logging.DEBUG
+        ), "Child logger effective level should be DEBUG through inheritance"
 
         # Child logger handlers should be synchronized to the effective level
-        assert child_handler.level == logging.DEBUG, (
-            "Child logger handler level should be synchronized to effective level"
-        )
+        assert (
+            child_handler.level == logging.DEBUG
+        ), "Child logger handler level should be synchronized to effective level"
 
         # Test with numeric level value
         update_log_levels(logging.INFO)
 
         # Check levels again
-        assert root_logger.level == logging.INFO, "Root logger level should be updated with numeric value"
-        assert root_handler.level == logging.INFO, "Root logger handler level should be updated with numeric value"
+        assert (
+            root_logger.level == logging.INFO
+        ), "Root logger level should be updated with numeric value"
+        assert (
+            root_handler.level == logging.INFO
+        ), "Root logger handler level should be updated with numeric value"
 
         # Check inheritance again
-        assert child_logger.level != logging.INFO, "Child logger level should NOT be explicitly set"
-        assert child_logger.getEffectiveLevel() == logging.INFO, (
-            "Child logger effective level should be INFO through inheritance"
-        )
-        assert child_handler.level == logging.INFO, (
-            "Child logger handler level should be synchronized to effective level"
-        )
+        assert (
+            child_logger.level != logging.INFO
+        ), "Child logger level should NOT be explicitly set"
+        assert (
+            child_logger.getEffectiveLevel() == logging.INFO
+        ), "Child logger effective level should be INFO through inheritance"
+        assert (
+            child_handler.level == logging.INFO
+        ), "Child logger handler level should be synchronized to effective level"
     finally:
         # Restore original state
         root_logger.handlers = original_root_handlers
@@ -157,7 +169,9 @@ def test_env_var_affects_logging(monkeypatch):
 
         # Get the root package logger to check its level was set from env var
         root_logger = logging.getLogger("mcp_server_tree_sitter")
-        assert root_logger.level == logging.DEBUG, "Root logger level should be DEBUG from env var"
+        assert (
+            root_logger.level == logging.DEBUG
+        ), "Root logger level should be DEBUG from env var"
 
         # Get a child logger from our package
         from mcp_server_tree_sitter.bootstrap import get_logger
@@ -165,10 +179,14 @@ def test_env_var_affects_logging(monkeypatch):
         test_logger = get_logger("mcp_server_tree_sitter.env_test")
 
         # Child logger should NOT have explicit level set
-        assert test_logger.level == logging.NOTSET, "Child logger should not have explicit level set"
+        assert (
+            test_logger.level == logging.NOTSET
+        ), "Child logger should not have explicit level set"
 
         # But its effective level should be inherited from root logger
-        assert test_logger.getEffectiveLevel() == logging.DEBUG, "Child logger effective level should be DEBUG"
+        assert (
+            test_logger.getEffectiveLevel() == logging.DEBUG
+        ), "Child logger effective level should be DEBUG"
 
         # Capture logs
         with capture_logs("mcp_server_tree_sitter.env_test") as log_capture:
@@ -177,9 +195,9 @@ def test_env_var_affects_logging(monkeypatch):
 
             # Check that debug message appears in logs
             logs = log_capture.getvalue()
-            assert "This is a debug message that should appear" in logs, (
-                "DEBUG messages should be logged when env var is set"
-            )
+            assert (
+                "This is a debug message that should appear" in logs
+            ), "DEBUG messages should be logged when env var is set"
 
     # Set environment variable to INFO
     monkeypatch.setenv("MCP_TS_LOG_LEVEL", "INFO")
@@ -195,7 +213,9 @@ def test_env_var_affects_logging(monkeypatch):
 
         # Get the root package logger to check its level was set from env var
         root_logger = logging.getLogger("mcp_server_tree_sitter")
-        assert root_logger.level == logging.INFO, "Root logger level should be INFO from env var"
+        assert (
+            root_logger.level == logging.INFO
+        ), "Root logger level should be INFO from env var"
 
         # Get a child logger
         from mcp_server_tree_sitter.bootstrap import get_logger
@@ -203,10 +223,14 @@ def test_env_var_affects_logging(monkeypatch):
         test_logger = get_logger("mcp_server_tree_sitter.env_test")
 
         # Child logger should NOT have explicit level set
-        assert test_logger.level == logging.NOTSET, "Child logger should not have explicit level set"
+        assert (
+            test_logger.level == logging.NOTSET
+        ), "Child logger should not have explicit level set"
 
         # But its effective level should be inherited from root logger
-        assert test_logger.getEffectiveLevel() == logging.INFO, "Child logger effective level should be INFO"
+        assert (
+            test_logger.getEffectiveLevel() == logging.INFO
+        ), "Child logger effective level should be INFO"
 
         # Capture logs
         with capture_logs("mcp_server_tree_sitter.env_test") as log_capture:
@@ -218,10 +242,12 @@ def test_env_var_affects_logging(monkeypatch):
 
             # Check logs
             logs = log_capture.getvalue()
-            assert "This debug message should be filtered out" not in logs, (
-                "DEBUG messages should be filtered when env var is INFO"
-            )
-            assert "This info message should appear" in logs, "INFO messages should be logged when env var is INFO"
+            assert (
+                "This debug message should be filtered out" not in logs
+            ), "DEBUG messages should be filtered when env var is INFO"
+            assert (
+                "This info message should appear" in logs
+            ), "INFO messages should be logged when env var is INFO"
 
         # Verify propagation is enabled
         child_logger = logging.getLogger("mcp_server_tree_sitter.env_test.deep")

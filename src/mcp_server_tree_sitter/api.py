@@ -38,7 +38,9 @@ def get_config_manager() -> Any:
     return get_container().config_manager
 
 
-def register_project(path: str, name: Optional[str] = None, description: Optional[str] = None) -> Dict[str, Any]:
+def register_project(
+    path: str, name: Optional[str] = None, description: Optional[str] = None
+) -> Dict[str, Any]:
     """Register a project."""
     project_registry = get_project_registry()
     language_registry = get_language_registry()
@@ -88,7 +90,9 @@ def remove_project(name: str) -> Dict[str, str]:
     return {"status": "success", "message": f"Project '{name}' removed"}
 
 
-def clear_cache(project: Optional[str] = None, file_path: Optional[str] = None) -> Dict[str, str]:
+def clear_cache(
+    project: Optional[str] = None, file_path: Optional[str] = None
+) -> Dict[str, str]:
     """Clear the parse tree cache."""
     tree_cache = get_tree_cache()
 
@@ -100,7 +104,10 @@ def clear_cache(project: Optional[str] = None, file_path: Optional[str] = None) 
 
         # Clear cache
         tree_cache.invalidate(abs_path)
-        return {"status": "success", "message": f"Cache cleared for {file_path} in {project}"}
+        return {
+            "status": "success",
+            "message": f"Cache cleared for {file_path} in {project}",
+        }
     else:
         # Clear all
         tree_cache.invalidate()

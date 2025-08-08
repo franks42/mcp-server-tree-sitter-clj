@@ -58,7 +58,9 @@ def diagnose_yaml_config(config_path: str) -> Dict[str, Any]:
 
     # Check if parsed data is None or empty
     if config_data is None:
-        result["error"] = "YAML parser returned None (file empty or contains only comments)"
+        result["error"] = (
+            "YAML parser returned None (file empty or contains only comments)"
+        )
         return result
 
     if not isinstance(config_data, dict):

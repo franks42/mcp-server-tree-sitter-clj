@@ -12,10 +12,15 @@ from mcp_server_tree_sitter.config import ConfigurationManager
 @pytest.fixture
 def temp_yaml_file():
     """Create a temporary YAML file with test configuration."""
-    with tempfile.NamedTemporaryFile(suffix=".yaml", mode="w+", delete=False) as temp_file:
+    with tempfile.NamedTemporaryFile(
+        suffix=".yaml", mode="w+", delete=False
+    ) as temp_file:
         test_config = {
             "cache": {"enabled": True, "max_size_mb": 256, "ttl_seconds": 3600},
-            "security": {"max_file_size_mb": 10, "excluded_dirs": [".git", "node_modules", "__pycache__", ".cache"]},
+            "security": {
+                "max_file_size_mb": 10,
+                "excluded_dirs": [".git", "node_modules", "__pycache__", ".cache"],
+            },
             "language": {"auto_install": True, "default_max_depth": 7},
         }
         yaml.dump(test_config, temp_file)
@@ -36,7 +41,9 @@ def test_env_overrides_defaults(monkeypatch):
     mgr = ConfigurationManager()
     cfg = mgr.get_config()
 
-    assert cfg.cache.max_size_mb == 512, "Environment variable should override default value"
+    assert (
+        cfg.cache.max_size_mb == 512
+    ), "Environment variable should override default value"
     # ensure other defaults stay intact
     assert cfg.security.max_file_size_mb == 5
     assert cfg.language.default_max_depth == 5
@@ -59,8 +66,12 @@ def test_env_overrides_yaml(temp_yaml_file, monkeypatch):
     cfg = mgr.get_config()
 
     # Verify environment variables override YAML settings
-    assert cfg.cache.max_size_mb == 1024, "Environment variable should override YAML values"
-    assert cfg.security.max_file_size_mb == 15, "Environment variable should override YAML values"
+    assert (
+        cfg.cache.max_size_mb == 1024
+    ), "Environment variable should override YAML values"
+    assert (
+        cfg.security.max_file_size_mb == 15
+    ), "Environment variable should override YAML values"
 
     # But YAML values that aren't overridden by env vars should remain
     assert cfg.cache.ttl_seconds == 3600

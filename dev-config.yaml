@@ -1,0 +1,51 @@
+# Development configuration for Clojure-enhanced tree-sitter MCP server
+server:
+  port: 3001
+  debug: true
+  host: localhost
+  
+logging:
+  level: DEBUG
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: logs/dev-server.log
+  
+cache:
+  enabled: true
+  ttl_seconds: 60  # Shorter TTL for development (1 minute)
+  max_size_mb: 100
+  
+languages:
+  # Existing languages remain supported
+  python:
+    enabled: true
+  javascript:
+    enabled: true
+  typescript:
+    enabled: true
+  go:
+    enabled: true
+  rust:
+    enabled: true
+  
+  # New Clojure support
+  clojure:
+    enabled: true
+    parser: tree_sitter_clojure
+    queries_path: src/mcp_server_tree_sitter/language/templates/clojure.py
+    file_extensions:
+      - .clj
+      - .cljs
+      - .cljc
+      - .edn
+    
+testing:
+  test_project_path: /tmp/clojure-test-project
+  validation_targets:
+    tool_functions: 16
+    parse_time_ms: 500
+    max_file_size_mb: 5
+    
+development:
+  auto_reload: false  # Would need watchdog integration
+  verbose_errors: true
+  profiling: false

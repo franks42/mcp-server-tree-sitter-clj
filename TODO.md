@@ -163,6 +163,12 @@ python -m mcp_server_tree_sitter find-function-definitions clojure-test --patter
 - Test with `uv run pytest` for validation
 - Follow incremental development approach
 
+### Design Documentation
+- **Update `DESIGN_DECISIONS.md`** after each major decision
+- Document alternatives considered and rationale
+- Keep decision log current with implementation status
+- Capture lessons learned for future reference
+
 ### Tree-sitter Specifics
 - Leverage 5-minute cache TTL for performance
 - Clear cache when testing changes: `clear_cache()`
@@ -195,6 +201,7 @@ python -m mcp_server_tree_sitter find-function-definitions clojure-test --patter
 - Main validation file: `src/mcp_nrepl_proxy/core.clj`
 - Query samples: `clj-resources/clojure-query-samples.scm`
 - All tool-* functions are private (`defn-`), not public (`defn`)
+- **Design decisions**: See `DESIGN_DECISIONS.md` for rationale and alternatives
 
 ## Key Findings
 

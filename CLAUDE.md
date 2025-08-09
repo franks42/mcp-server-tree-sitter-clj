@@ -232,3 +232,36 @@ When testing this repository with Claude Code, focus on:
 5. **Integration**: Verify MCP server works with Claude Desktop
 
 The repository is production-ready with comprehensive test coverage and excellent performance metrics.
+
+## 📸 Snapshot Command Protocol
+
+When working with Claude Code, the **"snapshot!"** directive is a shorthand command for creating a complete project milestone:
+
+### What "snapshot!" means:
+1. **Commit all changes** with descriptive commit message including key achievements
+2. **Push changes** to remote repository for backup and sharing
+3. **Create and push a version tag** with semantic versioning (e.g., v0.8.1)
+4. **Update relevant documentation** if needed (CLAUDE.md, README, etc.)
+5. **Store achievement in memory** for future reference and continuity
+
+### Usage Pattern:
+```
+User: "snapshot!"
+Assistant: 
+- git add and commit changes with detailed message
+- git push to remote repository
+- git tag with version and description
+- Update CLAUDE.md or other docs if needed
+- Store milestone in memory with key achievements
+- Report completion status
+```
+
+### Purpose:
+This ensures all progress is properly preserved, documented, and version-controlled for:
+- **Backup safety** - Changes are committed and pushed to remote
+- **Version tracking** - Tagged releases for major milestones
+- **Documentation** - Key achievements recorded for future reference
+- **Collaboration** - Changes available to team members immediately
+- **Continuity** - Memory storage enables cross-session project understanding
+
+**Example**: After implementing enhanced MCP tool discoverability (v0.8.1), "snapshot!" created commit, tag, push, and memory entry documenting the successful solution to AI tool discovery issues.

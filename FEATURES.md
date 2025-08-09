@@ -90,6 +90,21 @@ list_projects_tool()
 remove_project_tool(name="my-project")
 ```
 
+### Context and Overview Commands
+
+Essential starting point for discovering the server capabilities.
+
+| Command | Status | Dependencies | Notes |
+|---------|--------|--------------|-------|
+| `get_treesitter_context` | ✅ | None | **CALL THIS FIRST!** Complete server overview, capabilities, documentation links, and quick start guide |
+
+**Example Usage:**
+```python
+# Essential first call when discovering the server
+context = get_treesitter_context()
+# Returns comprehensive server info, capabilities, cookbook links, quick start workflow
+```
+
 ### Language Tools Commands
 
 These commands manage tree-sitter language parsers.

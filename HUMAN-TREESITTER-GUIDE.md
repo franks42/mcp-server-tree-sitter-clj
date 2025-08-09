@@ -36,10 +36,13 @@ This tree-sitter server provides **advanced analysis** especially for:
 
 **When you need to understand a new or complex codebase:**
 
-**Ask AI:** *"Analyze the structure and architecture of this project. What are the main components and how do they relate?"*
+**Ask AI:** *"Analyze the structure and architecture of this project using tree-sitter. What are the main components and how do they relate?"*
 
 **What AI will do:**
 ```python
+# AI first gets server context (new essential step!)
+context = mcp__tree_sitter__get_treesitter_context()
+
 # AI registers your project and analyzes structure
 project_analysis = mcp__tree_sitter__analyze_project(
     project="your-project", scan_depth=3
@@ -462,8 +465,8 @@ Would you like me to show specific refactoring steps for any of these issues?"
 ### Before Your First AI Analysis Session:
 
 1. **✅ Ensure AI has tree-sitter MCP access**
-   - Verify AI can call `mcp__tree_sitter__` tools
-   - Test with simple project registration
+   - Verify AI can call `mcp__tree_sitter__get_treesitter_context()`
+   - This function provides complete server overview and guidance
 
 2. **✅ Prepare your project**
    - Clean up any obvious junk files

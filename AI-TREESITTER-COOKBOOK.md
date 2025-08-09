@@ -33,6 +33,11 @@ This server provides **advanced Clojure analysis** beyond standard tree-sitter:
 
 ---
 
+## 🔄 Essential First Step
+
+### Context Function - Start Here!
+- `mcp__tree_sitter__get_treesitter_context` - **CALL THIS FIRST!** Get complete server overview, capabilities, and documentation links
+
 ## 📚 Available MCP Tools
 
 ### Core Analysis Tools
@@ -56,6 +61,16 @@ This server provides **advanced Clojure analysis** beyond standard tree-sitter:
 ---
 
 ## 🔄 Progressive AI Workflows
+
+### Phase 0: Essential Context (MANDATORY FIRST STEP)
+
+**Goal:** Get comprehensive server context and guidance
+
+```python
+# ALWAYS START HERE - Get complete context and roadmap
+context = mcp__tree_sitter__get_treesitter_context()
+# Returns: server overview, capabilities, documentation links, quick start workflow
+```
 
 ### Phase 1: Codebase Discovery and Mapping
 

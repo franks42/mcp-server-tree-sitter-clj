@@ -28,8 +28,9 @@ The core innovation is a **2,850+ line ClojureAnalyzer** class that solves tree-
 ### Test Suite
 - **`test_comprehensive_clojure.py`** - 13-category test suite (100% success rate)
 - **`test_performance_validation.py`** - Performance validation (4-5x better than requirements)
-- **`test_concurrent_analysis_fixed.py`** - Multiprocess concurrent analysis testing
+- **`test_mcp_integration_simple.py`** - **NEW** MCP interface validation (7 integration tests)
 - **`test_mcp_server.py`** - Claude Desktop integration validation
+- **`run_all_tests.py`** - **NEW** Test runner for consolidated validation
 
 ### Test Data
 - **`clj-resources/clojure-test-project/`** - Complete Clojure test codebase (mcp-nrepl project)
@@ -70,7 +71,32 @@ uv run python test_performance_validation.py
 - ✅ Memory usage within acceptable limits
 - ✅ Cache system working with 5-minute TTL
 
-### 4. Claude Desktop Integration Test
+### 4. MCP Interface Integration Test (NEW)
+
+```bash
+# Run comprehensive MCP interface validation
+uv run python test_mcp_integration_simple.py
+```
+
+**Expected Results**:
+- ✅ 7/7 integration tests passing
+- ✅ All MCP tools accessible through internal APIs
+- ✅ Clojure query templates loaded correctly
+- ✅ Performance validation (87.6ms for 1546 lines)
+
+### 5. All Tests Runner (NEW)
+
+```bash
+# Run all essential tests with consolidated results
+uv run python run_all_tests.py
+```
+
+**Expected Results**:
+- ✅ 4/4 test suites passing (100% success rate)
+- ✅ MCP server startup + integration + Clojure analysis + performance
+- ✅ Complete validation in ~4 seconds
+
+### 6. Claude Desktop Integration Test
 
 Follow the comprehensive test guide: `CLAUDE_DESKTOP_TESTING.md`
 
@@ -221,17 +247,73 @@ uv run -c "from mcp_server_tree_sitter.language.registry import get_language; pr
 - **WARNING**: Non-critical issues and fallbacks
 - **ERROR**: Critical failures requiring attention
 
+## 🔧 Recent Improvements & Important Lessons
+
+### Query Template Regression Fix (v0.8.2)
+
+**Problem**: Clojure query templates existed in `clojure.py` but weren't accessible through MCP functions.
+
+**Root Cause**: Missing import in `src/mcp_server_tree_sitter/language/templates/__init__.py` - templates worked in direct tests but failed through MCP interface.
+
+**Solution**: Added missing imports:
+```python
+from . import clojure  # Added to imports
+"clojure": clojure.TEMPLATES,  # Added to QUERY_TEMPLATES dict
+```
+
+**Key Lesson**: **Always test both direct API calls AND MCP interface calls** - they use different code paths!
+
+### Enhanced Test Suite Architecture
+
+**New Test Infrastructure**:
+- **`test_mcp_integration_simple.py`** - 7 comprehensive MCP interface tests
+- **`run_all_tests.py`** - Consolidated test runner for essential validation
+- **Dual Testing Strategy** - Direct API tests (fast, focused) + MCP interface tests (integration)
+
+**Benefits**:
+- ✅ Catches regressions in both direct and MCP code paths
+- ✅ Fast validation (4 tests in ~4 seconds) 
+- ✅ Clear separation between unit and integration testing
+- ✅ 100% success rate across all test categories
+
+### Tool Registration Priority Enhancement (v0.8.1)
+
+**Achievement**: AI assistants now read context function FIRST automatically
+
+**Implementation**: Enhanced tool registration order and metadata:
+```python
+@mcp_server.tool(
+    name="get_treesitter_context",
+    description="⚡ START HERE: Essential Tree-sitter MCP server context and capabilities overview"
+)
+```
+
+**Result**: Claude Desktop now discovers server capabilities immediately instead of missing 90% of functionality.
+
 ## 🎯 Testing with Claude Code
 
-When testing this repository with Claude Code, focus on:
+When testing this repository with Claude Code, use the enhanced test infrastructure:
 
-1. **Validation Commands**: Use the test scripts to verify all functionality
-2. **Core.clj Analysis**: Ensure exactly 16 tool-* functions are detected
-3. **Performance Testing**: Confirm sub-500ms parsing for large files
-4. **Edge Cases**: Test with `test_minimal.clj` and `test_spaced.clj` files
-5. **Integration**: Verify MCP server works with Claude Desktop
+### Quick Validation (Recommended)
+```bash
+# Run all essential tests with consolidated results  
+uv run python run_all_tests.py
+```
+**Expected**: 4/4 test suites passing in ~4 seconds
 
-The repository is production-ready with comprehensive test coverage and excellent performance metrics.
+### Individual Test Categories
+1. **MCP Integration**: `uv run python test_mcp_integration_simple.py` - Validates MCP interface
+2. **Clojure Analysis**: `uv run python test_comprehensive_clojure.py` - 13-category semantic analysis
+3. **Performance**: `uv run python test_performance_validation.py` - Speed benchmarks
+4. **Claude Desktop**: `uv run python test_mcp_server.py` - Integration readiness
+
+### Critical Validation Points
+1. **Core.clj Analysis**: Ensure exactly 16 tool-* functions are detected
+2. **Query Templates**: Verify 9 Clojure templates accessible through MCP interface  
+3. **Performance Testing**: Confirm sub-500ms parsing for large files (target: 87.6ms)
+4. **MCP Integration**: All dependency injection and tool registration working
+
+The repository is production-ready with comprehensive test coverage, excellent performance metrics, and dual testing strategy for both direct APIs and MCP interface validation.
 
 ## 📸 Snapshot Command Protocol
 

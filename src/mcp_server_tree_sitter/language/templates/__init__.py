@@ -5,6 +5,7 @@ from typing import Dict
 from . import (
     apl,
     c,
+    clojure,
     cpp,
     go,
     java,
@@ -25,6 +26,7 @@ QUERY_TEMPLATES: Dict[str, Dict[str, str]] = {
     "go": go.TEMPLATES,
     "rust": rust.TEMPLATES,
     "c": c.TEMPLATES,
+    "clojure": clojure.TEMPLATES,
     "cpp": cpp.TEMPLATES,
     "swift": swift.TEMPLATES,
     "java": java.TEMPLATES,

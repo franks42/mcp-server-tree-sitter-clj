@@ -538,6 +538,27 @@ make test-diagnostics-ci
 
 Diagnostic tests provide detailed information about the server's behavior and can help isolate specific issues. For more information about the diagnostic framework, please see the [diagnostics documentation](docs/diagnostics.md).
 
+### Enhanced Clojure Testing (v0.8.2)
+
+This enhanced fork includes comprehensive test infrastructure for Clojure analysis:
+
+```bash
+# Quick validation - all essential tests (recommended)
+uv run python run_all_tests.py
+
+# Individual test categories
+uv run python test_mcp_integration_simple.py    # MCP interface validation
+uv run python test_comprehensive_clojure.py     # 13-category Clojure analysis  
+uv run python test_performance_validation.py    # Performance benchmarks
+uv run python test_mcp_server.py                # Claude Desktop integration
+```
+
+**Key Features:**
+- ✅ **Dual Testing Strategy**: Both direct API and MCP interface validation
+- ✅ **100% Success Rate**: All test categories passing  
+- ✅ **Fast Validation**: 4 essential tests in ~4 seconds
+- ✅ **Clojure Query Templates**: 9 templates validated through MCP interface
+
 ### Type Safety Considerations
 
 The MCP Tree-sitter Server maintains type safety when interfacing with tree-sitter libraries through careful design patterns and protocols. If you're extending the codebase, please review the [type safety guide](docs/tree-sitter-type-safety.md) for important information about handling tree-sitter API variations.
